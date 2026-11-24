@@ -4,276 +4,204 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Asistencia · Cadena de gimnasios</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🏋️%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root { color-scheme: dark; }
+:root {
+  --pink: #FF1493; --soft: #FFD3E3; --char: #2C2C2C; --bg: #FFF5F7; --line: #F2D6E0; --muted: #7D6B73; --yel: #FFC233; --teal: #0FB5AE; --vio: #6C5CE7;
+  --disp: "Barlow Condensed", "Arial Narrow", Impact, sans-serif;
+}
 * { box-sizing: border-box; }
 html, body { margin: 0; }
-body {
-  font-family: 'Poppins', sans-serif; color: #F3EAF7; min-height: 100vh;
-  background:
-    radial-gradient(900px 500px at 8% -5%, rgba(255,46,147,.22), transparent 60%),
-    radial-gradient(800px 500px at 100% 0%, rgba(155,107,255,.20), transparent 55%),
-    radial-gradient(700px 500px at 50% 110%, rgba(39,211,245,.10), transparent 60%),
-    #0E0A14;
-  background-attachment: fixed;
-}
-button { font-family: inherit; }
+body { font-family: Barlow, system-ui, -apple-system, "Segoe UI", sans-serif; color: var(--char); background: var(--bg); font-size: 15.5px; line-height: 1.5; font-variant-numeric: tabular-nums; }
+button, input { font-family: inherit; }
 
-/* ───────── Barra lateral ───────── */
-#side {
-  position: fixed; inset: 0 auto 0 0; width: 300px; padding: 28px 22px 24px 22px; overflow-y: auto; z-index: 30;
-  background: linear-gradient(180deg, #1A1226 0%, #120C1B 100%); border-right: 1px solid rgba(255,255,255,.06);
-  transition: transform .3s ease;
-}
-#side h2 { margin: 0 0 4px 0; font-size: 1.45rem; font-weight: 700; color: #fff; }
-#side .sub { color: #A99BB8; font-size: .85rem; margin: 0 0 18px 0; }
-#side label.lab { display: block; font-size: .85rem; margin: 18px 0 8px 0; color: #F3EAF7; }
-.switch { display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: .92rem; user-select: none; }
-.switch input { display: none; }
-.switch .track { width: 34px; height: 18px; border-radius: 999px; background: #4a3f58; position: relative; transition: background .2s; flex: none; }
-.switch .track::after { content: ""; position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; border-radius: 50%; background: #fff; transition: transform .2s; }
-.switch input:checked + .track { background: #FF2E93; }
-.switch input:checked + .track::after { transform: translateX(16px); }
+/* ───── Barra lateral oscura ───── */
+#side { position: fixed; inset: 0 auto 0 0; width: 272px; padding: 30px 24px 24px; overflow-y: auto; background: var(--char); color: #fff; z-index: 30; transition: transform .25s; }
+#side h2 { margin: 0; font: 800 2rem/1 var(--disp); text-transform: uppercase; letter-spacing: .02em; }
+#side h2::after { content: ""; display: block; width: 44px; height: 5px; background: var(--pink); margin: 10px 0 12px; }
+#side .sub { margin: 0 0 6px; color: #BCAAB2; font-size: .86rem; }
+#side .lab { display: block; margin: 22px 0 8px; font: 700 1.02rem var(--disp); letter-spacing: .09em; text-transform: uppercase; color: var(--pink); }
+.chk { display: flex; align-items: center; gap: 10px; padding: 4px 0; font-size: .95rem; cursor: pointer; color: #F4ECEF; }
+.chk input { appearance: none; -webkit-appearance: none; width: 17px; height: 17px; margin: 0; border: 2px solid #7a6a71; border-radius: 3px; background: transparent; display: grid; place-content: center; flex: none; cursor: pointer; }
+.chk input:checked { background: var(--pink); border-color: var(--pink); }
+.chk input:checked::after { content: ""; width: 4px; height: 8px; border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg) translate(-1px, -1px); }
 .dates { display: flex; flex-direction: column; gap: 8px; }
-.dates span { display: none; }
-.dates input {
-  flex: 1; min-width: 0; padding: 9px 8px; border-radius: 10px; border: 1px solid rgba(255,255,255,.12);
-  background: rgba(0,0,0,.35); color: #fff; font-family: inherit; font-size: .8rem; color-scheme: dark;
-}
-.dates span { color: #A99BB8; }
-.pills { display: flex; flex-wrap: wrap; gap: 8px; }
-.pill {
-  padding: 6px 14px; border-radius: 999px; font-size: .84rem; cursor: pointer; transition: all .15s;
-  background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.14); color: #F3EAF7;
-}
-.pill:hover { border-color: #FF2E93; }
-.pill.on { background: rgba(255,46,147,.18); border-color: rgba(255,46,147,.7); color: #FF5FAE; }
-.btn-reset {
-  width: 100%; margin-top: 26px; padding: 10px; border-radius: 12px; cursor: pointer; font-size: .9rem;
-  background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.14); color: #fff; transition: all .15s;
-}
-.btn-reset:hover { border-color: #FF2E93; color: #FF5FAE; }
-#side hr { border: 0; border-top: 1px solid rgba(255,255,255,.08); margin: 22px 0 14px 0; }
-#side .foot { font-size: .75rem; color: #8d7f9d; line-height: 1.5; }
-#menuBtn {
-  display: none; position: fixed; top: 12px; left: 12px; z-index: 40; padding: 9px 16px; border-radius: 999px; cursor: pointer;
-  background: rgba(30,20,40,.92); border: 1px solid rgba(255,46,147,.6); color: #fff; font-weight: 600; font-size: .85rem;
-  backdrop-filter: blur(8px);
-}
+.dates input { width: 100%; padding: 8px 10px; border: 1px solid #5a4d53; border-radius: 4px; background: #3a3436; color: #fff; font-size: .9rem; color-scheme: dark; }
+.btn-reset { width: 100%; margin-top: 26px; padding: 10px; border: 0; border-radius: 4px; background: var(--pink); color: #fff; font: 700 1.05rem var(--disp); letter-spacing: .08em; text-transform: uppercase; cursor: pointer; }
+.btn-reset:hover { background: #e00f85; }
+#side .foot { margin-top: 26px; padding-top: 16px; border-top: 1px solid #4a4044; font-size: .8rem; color: #A99AA1; }
+#menuBtn { display: none; position: fixed; top: 10px; left: 10px; z-index: 40; padding: 8px 16px; border: 0; border-radius: 4px; background: var(--pink); color: #fff; font: 700 1rem var(--disp); letter-spacing: .08em; text-transform: uppercase; cursor: pointer; }
 
-/* ───────── Contenido ───────── */
-#main { margin-left: 300px; padding: 2.2rem 3rem 3rem 3rem; max-width: 1800px; }
-@media (max-width: 900px) {
-  #side { transform: translateX(-105%); width: min(320px, 88vw); }
-  body.side-open #side { transform: none; box-shadow: 0 0 60px rgba(0,0,0,.7); }
-  #menuBtn { display: block; }
-  #main { margin-left: 0; padding: 4rem 1rem 2rem 1rem; }
-}
-.hero { padding: 6px 0 10px 0; animation: fadeUp .7s ease both; }
-.hero .eyebrow { letter-spacing: .28em; font-size: .72rem; color: #FF7FBF; font-weight: 600; text-transform: uppercase; }
-.hero h1 {
-  font-size: clamp(2rem, 4.2vw, 3.3rem); font-weight: 800; line-height: 1.05; margin: .25rem 0 .5rem 0;
-  background: linear-gradient(92deg, #fff 0%, #FFB3DA 38%, #FF2E93 70%, #9B6BFF 100%);
-  -webkit-background-clip: text; background-clip: text; color: transparent;
-}
-.hero p { color: #A99BB8; font-size: .92rem; margin: 0 0 .7rem 0; max-width: 62rem; line-height: 1.55; }
-.chips { display: flex; flex-wrap: wrap; gap: 8px; }
-.chip {
-  display: inline-flex; align-items: center; gap: 7px; padding: 5px 12px; border-radius: 999px;
-  background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.10); font-size: .76rem; color: #E8DDF2; backdrop-filter: blur(6px);
-}
-.dot { width: 8px; height: 8px; border-radius: 50%; background: #2EE59D; box-shadow: 0 0 0 0 rgba(46,229,157,.7); animation: pulse 1.8s infinite; }
+/* ───── Contenido ───── */
+#main { margin-left: 272px; }
+@media (max-width: 900px) { #side { transform: translateX(-105%); width: min(300px, 86vw); } body.side-open #side { transform: none; box-shadow: 0 0 40px rgba(0,0,0,.4); } #menuBtn { display: block; } #main { margin-left: 0; } }
+.band { background: var(--char); color: #fff; padding: 38px 44px 30px; border-bottom: 6px solid var(--pink); }
+.band h1 { margin: 0; font: 800 clamp(2.4rem, 5vw, 4.2rem)/.95 var(--disp); text-transform: uppercase; letter-spacing: .005em; }
+.band h1 em { font-style: normal; color: var(--pink); }
+.band .lead { margin: 14px 0 0; color: #D8CBD1; max-width: 46rem; }
+.band .meta { margin: 8px 0 0; font: 600 1.05rem var(--disp); letter-spacing: .08em; text-transform: uppercase; color: var(--pink); }
+.wrap { padding: 26px 44px 44px; max-width: 1700px; }
+@media (max-width: 900px) { .band { padding: 62px 18px 24px; } .wrap { padding: 20px 14px 34px; } }
 
-.kpis { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 14px; margin: 18px 0 8px 0; }
+.kpis { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px; }
 @media (max-width: 1250px) { .kpis { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-@media (max-width: 700px)  { .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-.kpi {
-  position: relative; overflow: hidden; padding: 16px 16px 12px 16px; border-radius: 20px;
-  background: linear-gradient(160deg, rgba(255,255,255,.075), rgba(255,255,255,.025)); border: 1px solid rgba(255,255,255,.09);
-  backdrop-filter: blur(8px); transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease; animation: fadeUp .7s ease both;
-}
-.kpi:hover { transform: translateY(-5px); border-color: var(--c); box-shadow: 0 14px 34px -14px var(--c); }
-.kpi::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 3px; background: linear-gradient(90deg, var(--c), transparent); }
-.kpi .lab { font-size: .7rem; letter-spacing: .12em; text-transform: uppercase; color: #A99BB8; font-weight: 600; }
-.kpi .val { font-size: 1.95rem; font-weight: 800; color: #fff; line-height: 1.15; margin: 4px 0 0 0; }
-.kpi .sub { font-size: .76rem; color: #BFB1CE; min-height: 1.1rem; }
-.kpi svg { display: block; margin-top: 6px; width: 100%; height: 34px; }
+@media (max-width: 700px) { .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.kpi { padding: 16px 18px 14px; border-radius: 6px; border: 1px solid var(--line); background: #fff; }
+.kpi .lab { font: 600 1rem var(--disp); letter-spacing: .08em; text-transform: uppercase; opacity: .8; }
+.kpi .val { font: 700 3.1rem/1.02 var(--disp); margin: 2px 0 4px; }
+.kpi .sub { font-size: .82rem; opacity: .85; }
+.k-pink { background: var(--pink); border-color: var(--pink); color: #fff; }
+.k-char { background: var(--char); border-color: var(--char); color: #fff; }
+.k-soft { background: var(--soft); border-color: var(--soft); }
 
-.insights { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin: 10px 0 6px 0; }
-@media (max-width: 900px) { .insights { grid-template-columns: 1fr; } }
-.ins {
-  padding: 14px 16px; border-radius: 16px; font-size: .86rem; line-height: 1.45; color: #E8DDF2;
-  background: linear-gradient(135deg, rgba(255,46,147,.13), rgba(155,107,255,.08)); border: 1px solid rgba(255,46,147,.25); animation: fadeUp .9s ease both;
-}
-.ins b { color: #fff; }
-.ins .em { font-size: 1.25rem; margin-right: 6px; }
+.stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 14px 0 6px; }
+@media (max-width: 900px) { .stats { grid-template-columns: 1fr; } }
+.stat { padding: 14px 18px 14px; background: #fff; border: 1px solid var(--line); border-top: 4px solid var(--pink); border-radius: 6px; }
+.stat b { display: block; font: 800 2.7rem/1 var(--disp); color: var(--pink); }
+.stat span { font-size: .92rem; color: #4a3f44; }
 
-.tabs { display: flex; gap: 6px; margin: 26px 0 18px 0; border-bottom: 1px solid rgba(255,255,255,.08); overflow-x: auto; scrollbar-width: none; }
+.tabs { display: flex; gap: 6px; margin: 26px 0 18px; overflow-x: auto; scrollbar-width: none; }
 .tabs::-webkit-scrollbar { display: none; }
-.tab {
-  position: relative; background: none; border: 0; color: #D5CBE0; font-weight: 600; font-size: .95rem; padding: 10px 16px; cursor: pointer; white-space: nowrap;
-}
-.tab:hover { color: #fff; }
-.tab.active { color: #FF5FAE; }
-.tab.active::after { content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 3px; border-radius: 3px; background: linear-gradient(90deg, #FF2E93, #9B6BFF); }
-.panel { display: none; }
-.panel.active { display: block; animation: fadeUp .5s ease both; }
+.tab { padding: 9px 18px; border: 2px solid transparent; border-radius: 4px; background: none; color: var(--char); font: 700 1.2rem var(--disp); letter-spacing: .05em; text-transform: uppercase; cursor: pointer; white-space: nowrap; }
+.tab:hover { border-color: var(--pink); color: var(--pink); }
+.tab.active { background: var(--pink); border-color: var(--pink); color: #fff; }
+.panel { display: none; } .panel.active { display: block; }
 
-.row { display: grid; gap: 16px; margin-bottom: 16px; }
-.r21 { grid-template-columns: 2.1fr 1fr; } .r2 { grid-template-columns: 1fr 1fr; } .r16 { grid-template-columns: 1.6fr 1fr; }
-.r115 { grid-template-columns: 1.15fr 1fr; } .r1 { grid-template-columns: 1fr; }
+.row { display: grid; gap: 14px; margin-bottom: 14px; }
+.r21 { grid-template-columns: 2.1fr 1fr; } .r2 { grid-template-columns: 1fr 1fr; } .r16 { grid-template-columns: 1.6fr 1fr; } .r115 { grid-template-columns: 1.15fr 1fr; } .r1 { grid-template-columns: 1fr; }
 @media (max-width: 1000px) { .r21, .r2, .r16, .r115 { grid-template-columns: 1fr; } }
-.card {
-  min-width: 0; background: linear-gradient(165deg, rgba(255,255,255,.06), rgba(255,255,255,.02)); border: 1px solid rgba(255,255,255,.08);
-  border-radius: 22px; padding: 18px 20px 10px 20px; box-shadow: 0 20px 40px -28px rgba(0,0,0,.8);
-}
-.ctitle { font-weight: 700; font-size: 1.05rem; color: #fff; margin: 0; }
-.cdesc { font-size: .78rem; color: #A99BB8; margin: 2px 0 6px 0; }
-.cap { font-size: .8rem; color: #A99BB8; margin: 8px 0 0 0; }
+.card { min-width: 0; padding: 18px 20px 12px; background: #fff; border: 1px solid var(--line); border-radius: 6px; }
+.card.dark { background: var(--char); border-color: var(--char); color: #fff; }
+.ctitle { margin: 0; font: 700 1.4rem/1.15 var(--disp); text-transform: uppercase; letter-spacing: .02em; display: flex; align-items: center; gap: 9px; }
+.ctitle::before { content: ""; width: 10px; height: 10px; background: var(--pink); flex: none; }
+.cdesc { margin: 3px 0 10px; font-size: .86rem; color: var(--muted); }
+.dark .cdesc { color: #C9B8BF; }
+.cap { margin: 12px 0 0; font: 600 1.05rem var(--disp); text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
 
-.seg { display: inline-flex; border: 1px solid rgba(255,255,255,.14); border-radius: 10px; overflow: hidden; margin: 4px 0 6px 0; }
-.seg button { background: rgba(0,0,0,.25); color: #fff; border: 0; padding: 7px 16px; font-size: .85rem; cursor: pointer; border-right: 1px solid rgba(255,255,255,.1); }
-.seg button:last-child { border-right: 0; }
-.seg button.on { background: rgba(255,46,147,.2); color: #FF5FAE; box-shadow: inset 0 0 0 1px #FF2E93; }
+.seg { display: inline-flex; margin: 2px 0 8px; border: 2px solid var(--char); border-radius: 4px; overflow: hidden; }
+.seg button { padding: 5px 16px; border: 0; background: #fff; color: var(--char); font: 700 1rem var(--disp); letter-spacing: .06em; text-transform: uppercase; cursor: pointer; }
+.seg button + button { border-left: 2px solid var(--char); }
+.seg button.on { background: var(--char); color: #fff; }
 
-.plans { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 6px; }
-.plan { border-radius: 16px; padding: 14px; background: rgba(255,255,255,.045); border: 1px solid rgba(255,255,255,.08); border-top: 3px solid var(--c); }
-.plan .n { font-weight: 700; color: var(--c); font-size: .85rem; letter-spacing: .05em; text-transform: uppercase; }
-.plan .big { font-size: 1.5rem; font-weight: 800; color: #fff; }
-.plan .s { font-size: .74rem; color: #A99BB8; }
+table.mini { width: 100%; border-collapse: collapse; font-size: .9rem; margin: 2px 0 4px; }
+table.mini th { text-align: left; font: 600 .98rem var(--disp); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); padding: 6px 8px 6px 0; border-bottom: 2px solid var(--char); }
+table.mini td { padding: 8px 8px 8px 0; border-bottom: 1px solid var(--line); }
+table.mini td.n, table.mini th.n { text-align: right; padding-right: 0; }
+table.mini td b { font: 700 1.3rem var(--disp); color: var(--pink); }
+.sw { display: inline-block; width: 11px; height: 11px; margin-right: 8px; border-radius: 2px; }
 
-.rank { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 14px; margin-bottom: 8px;
-  background: rgba(255,255,255,.045); border: 1px solid rgba(255,255,255,.07); border-left: 4px solid var(--c); }
-.rank .pos { font-size: 1.35rem; min-width: 1.6rem; text-align: center; }
-.rank .nm { font-weight: 700; color: #fff; font-size: .95rem; }
-.rank .ds { font-size: .74rem; color: #A99BB8; }
-.rank .vv { margin-left: auto; text-align: right; font-weight: 800; color: #fff; }
-.rank .vv small { display: block; font-weight: 500; color: #A99BB8; font-size: .7rem; }
+.rk { display: grid; grid-template-columns: 26px 86px 1fr 92px; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--line); }
+.rk .n { font: 800 1.6rem/1 var(--disp); color: var(--pink); } .rk .nm { font-weight: 600; }
+.rk .bar { height: 12px; background: #FBE6EE; border-radius: 2px; overflow: hidden; } .rk .bar i { display: block; height: 100%; }
+.rk .v { text-align: right; font: 700 1.35rem/1.1 var(--disp); } .rk .v small { display: block; font: 500 .8rem Barlow, sans-serif; color: var(--muted); }
 
-.warn { padding: 22px; border-radius: 16px; background: rgba(255,184,77,.1); border: 1px solid rgba(255,184,77,.4); color: #FFD9A0; }
+.warn { margin: 30px 44px; padding: 18px; border: 2px solid var(--yel); background: #FFF6DB; border-radius: 6px; }
 
-/* Tabla */
-.tbl { border: 1px solid rgba(255,255,255,.08); border-radius: 14px; overflow: hidden; margin-top: 8px; }
-.tbl .th, .tbl .tr { display: grid; grid-template-columns: 1fr .8fr 1.5fr .9fr 1.1fr 1fr 1.4fr 1fr; align-items: center; padding: 0 14px; font-size: .84rem; }
-.tbl .th { background: rgba(255,255,255,.06); font-weight: 600; height: 40px; }
-.tbl .th span { cursor: pointer; user-select: none; } .tbl .th span:hover { color: #FF5FAE; }
+.tbl { border: 1px solid var(--line); border-radius: 6px; overflow: hidden; margin-top: 6px; }
+.tbl .th, .tbl .tr { display: grid; grid-template-columns: 1fr .8fr 1.5fr .9fr 1.1fr 1fr 1.4fr 1fr; align-items: center; padding: 0 14px; font-size: .9rem; }
+.tbl .th { background: var(--char); color: #fff; font: 600 1.05rem var(--disp); letter-spacing: .07em; text-transform: uppercase; height: 42px; }
+.tbl .th span { cursor: pointer; user-select: none; } .tbl .th span:hover { color: var(--pink); }
 .tbl .vp { height: 460px; overflow: auto; position: relative; }
-.tbl .tr { height: 34px; border-top: 1px solid rgba(255,255,255,.05); position: absolute; left: 0; right: 0; white-space: nowrap; }
+.tbl .tr { height: 34px; border-top: 1px solid var(--line); position: absolute; left: 0; right: 0; white-space: nowrap; }
 .tbl .tr > * { overflow: hidden; text-overflow: ellipsis; padding-right: 8px; }
-.tbl .tr:hover { background: rgba(255,46,147,.08); }
+.tbl .tr:hover { background: #FFF0F5; }
 @media (max-width: 800px) { .tbl .th, .tbl .tr { min-width: 760px; } }
-.dl { margin-top: 12px; padding: 9px 18px; border-radius: 12px; cursor: pointer; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.14); color: #fff; font-size: .88rem; }
-.dl:hover { border-color: #FF2E93; color: #FF5FAE; }
-.footer { text-align: center; color: #7C6E8C; font-size: .75rem; margin-top: 26px; }
-
-@keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
-@keyframes pulse { 70% { box-shadow: 0 0 0 9px rgba(46,229,157,0); } 100% { box-shadow: 0 0 0 0 rgba(46,229,157,0); } }
+.dl { margin: 14px 0 6px; padding: 9px 20px; border: 0; border-radius: 4px; background: var(--pink); color: #fff; font: 700 1.05rem var(--disp); letter-spacing: .08em; text-transform: uppercase; cursor: pointer; }
+.dl:hover { background: #e00f85; }
+.footer { margin-top: 30px; color: var(--muted); font-size: .82rem; }
 </style>
 </head>
 <body>
-<button id="menuBtn">🎛️ Filtros</button>
+<button id="menuBtn">Filtros</button>
 
 <aside id="side">
-  <h2>🎛️ Filtros</h2>
-  <p class="sub">Todo el dashboard se recalcula al instante.</p>
-  <label class="switch" title="Oculta sesiones con fecha futura (datos aún no ocurridos)."><input type="checkbox" id="fPasado" checked><span class="track"></span>Solo hasta hoy</label>
-  <label class="lab">Periodo</label>
-  <div class="dates"><input type="date" id="d0"><span>–</span><input type="date" id="d1"></div>
-  <label class="lab">Sede</label><div class="pills" id="pSede"></div>
-  <label class="lab">Plan</label><div class="pills" id="pPlan"></div>
-  <label class="lab">Disciplina</label><div class="pills" id="pDisc"></div>
-  <label class="lab">Canal de ingreso</label><div class="pills" id="pCanal"></div>
-  <button class="btn-reset" id="reset">↺ Restablecer filtros</button>
-  <hr>
-  <div class="foot">Datos sintéticos sembrados por el equipo para probar el modelo. Fuente: consultas SQL sobre <code>gimnasio_db</code>.</div>
+  <h2>Filtros</h2>
+  <p class="sub">Se aplican a todas las pestañas.</p>
+  <label class="chk" style="margin-top:14px"><input type="checkbox" id="fPasado" checked> Solo hasta hoy</label>
+  <span class="lab">Periodo</span>
+  <div class="dates"><input type="date" id="d0"><input type="date" id="d1"></div>
+  <span class="lab">Sede</span><div id="pSede"></div>
+  <span class="lab">Plan</span><div id="pPlan"></div>
+  <span class="lab">Disciplina</span><div id="pDisc"></div>
+  <span class="lab">Canal de ingreso</span><div id="pCanal"></div>
+  <button class="btn-reset" id="reset">Restablecer</button>
+  <div class="foot">Datos sintéticos generados para probar el modelo. Fuente: consultas SQL sobre gimnasio_db.</div>
 </aside>
 
 <main id="main">
-  <div id="warn" class="warn" hidden>No hay asistencias con esa combinación de filtros. Prueba ampliando el periodo o las selecciones.</div>
+  <div id="warn" class="warn" hidden>No hay asistencias con esa combinación de filtros. Amplía el periodo o las selecciones.</div>
   <div id="dash">
-    <div class="hero" id="hero"></div>
-    <div class="kpis" id="kpis"></div>
-    <div class="insights" id="ins"></div>
+    <header class="band" id="hero"></header>
+    <div class="wrap">
+      <div class="kpis" id="kpis"></div>
+      <div class="stats" id="ins"></div>
 
-    <div class="tabs" id="tabs">
-      <button class="tab active">📈 Evolución</button>
-      <button class="tab">🏁 Carrera de disciplinas</button>
-      <button class="tab">👥 Socios y planes</button>
-      <button class="tab">🗓️ Horarios</button>
-      <button class="tab">📲 Canal de ingreso</button>
-      <button class="tab">🗃️ Datos</button>
-    </div>
+      <div class="tabs" id="tabs">
+        <button class="tab active">Evolución</button><button class="tab">Disciplinas</button><button class="tab">Socios y planes</button>
+        <button class="tab">Horarios</button><button class="tab">Canal de ingreso</button><button class="tab">Datos</button>
+      </div>
 
-    <!-- 1 · Evolución -->
-    <section class="panel active" id="p0">
-      <div class="row r21">
-        <div class="card">
-          <p class="ctitle">Asistencias por mes</p><p class="cdesc">Cambia la vista para ver qué hay detrás de cada mes.</p>
-          <div class="seg" id="seg"><button class="on">Total</button><button>Disciplina</button><button>Sede</button><button>Plan</button></div>
-          <div id="c_mes"></div>
+      <section class="panel active" id="p0">
+        <div class="row r21">
+          <div class="card">
+            <p class="ctitle">Asistencias por mes</p><p class="cdesc">Total, o desglosado por disciplina, sede o plan.</p>
+            <div class="seg" id="seg"><button class="on">Total</button><button>Disciplina</button><button>Sede</button><button>Plan</button></div>
+            <div id="c_mes"></div>
+          </div>
+          <div class="card"><p class="ctitle">Canal de ingreso</p><p class="cdesc">Porcentaje de asistencias por cada canal.</p><div id="c_dona"></div></div>
         </div>
-        <div class="card"><p class="ctitle">¿Por dónde entran?</p><p class="cdesc">Pasa el mouse sobre cada porción.</p><div id="c_dona"></div></div>
-      </div>
-      <div class="row r1"><div class="card">
-        <p class="ctitle">Calendario de actividad</p><p class="cdesc">Cada cuadro es un día: más rosado = más asistencias. Se ven los picos de inicio de año y la caída de mitad de año.</p>
-        <div id="c_cal"></div></div></div>
-    </section>
+        <div class="row r1"><div class="card"><p class="ctitle">Calendario de actividad</p><p class="cdesc">Asistencias por día. Cuanto más intenso el rosado, más asistencias.</p><div id="c_cal"></div></div></div>
+      </section>
 
-    <!-- 2 · Carrera -->
-    <section class="panel" id="p1">
-      <div class="row r21">
-        <div class="card"><p class="ctitle">Carrera de disciplinas · acumulado mes a mes</p><p class="cdesc">Pulsa ▶ Reproducir o arrastra el control de abajo para viajar por el tiempo.</p><div id="c_race"></div></div>
-        <div class="card"><p class="ctitle">Podio final</p><p class="cdesc">Posición al cierre del periodo seleccionado.</p><div id="rank"></div>
-          <p class="cap">Ritmo mensual por disciplina</p><div id="c_ritmo"></div></div>
-      </div>
-      <div class="row r1"><div class="card"><p class="ctitle">¿Quién asiste a qué? · Sede → Disciplina → Plan</p><p class="cdesc">Haz clic en una porción para hacer zoom; clic en el centro para volver.</p><div id="c_sun"></div></div></div>
-    </section>
+      <section class="panel" id="p1">
+        <div class="row r21">
+          <div class="card dark"><p class="ctitle">Asistencias acumuladas por disciplina</p><p class="cdesc">Pulsa Reproducir o mueve el control de abajo para recorrer los meses.</p><div id="c_race"></div></div>
+          <div class="card"><p class="ctitle">Ranking de disciplinas</p><p class="cdesc">Total del periodo seleccionado.</p><div id="rank"></div>
+            <p class="cap">Asistencias por mes</p><div id="c_ritmo"></div></div>
+        </div>
+        <div class="row r1"><div class="card"><p class="ctitle">Asistencias por sede, disciplina y plan</p><p class="cdesc">Haz clic en una porción para acercarte; clic en el centro para volver.</p><div id="c_sun"></div></div></div>
+      </section>
 
-    <!-- 3 · Socios y planes -->
-    <section class="panel" id="p2">
-      <div class="row r2">
-        <div class="card"><p class="ctitle">Visitas por socio según plan</p><p class="cdesc" id="d_vps"></p><div id="c_vps"></div></div>
-        <div class="card"><p class="ctitle">Hora de llegada según plan</p><p class="cdesc">Barra gruesa = 50 % central de las llegadas · línea fina = rango completo · punto = promedio.</p><div id="c_hora"></div></div>
-      </div>
-      <div class="row r115">
-        <div class="card"><p class="ctitle">Los 10 socios más constantes</p><p class="cdesc">Pasa el mouse para ver su plan y su aporte al total.</p><div id="c_top"></div></div>
-        <div class="card"><p class="ctitle">¿Cuánto cuesta cada visita?</p><p class="cdesc">Precio mensual del plan ÷ visitas al mes de un socio promedio.</p>
-          <div id="plans"></div><p class="cap">Visitas por socio, mes a mes</p><div id="c_costo"></div></div>
-      </div>
-    </section>
+      <section class="panel" id="p2">
+        <div class="row r2">
+          <div class="card"><p class="ctitle">Visitas por socio según plan</p><p class="cdesc" id="d_vps"></p><div id="c_vps"></div></div>
+          <div class="card"><p class="ctitle">Hora de llegada según plan</p><p class="cdesc">Barra gruesa: 50 % central de las llegadas. Línea fina: rango completo. Punto: promedio.</p><div id="c_hora"></div></div>
+        </div>
+        <div class="row r115">
+          <div class="card"><p class="ctitle">Socios con más visitas</p><p class="cdesc">Los 10 primeros del periodo.</p><div id="c_top"></div></div>
+          <div class="card"><p class="ctitle">Costo por visita</p><p class="cdesc">Precio mensual del plan dividido entre las visitas al mes de un socio promedio.</p>
+            <div id="plans"></div><p class="cap">Visitas por socio, mes a mes</p><div id="c_costo"></div></div>
+        </div>
+      </section>
 
-    <!-- 4 · Horarios -->
-    <section class="panel" id="p3">
-      <div class="row r16">
-        <div class="card"><p class="ctitle">¿Cuándo se llenan las clases?</p><p class="cdesc">Día de la semana × hora de inicio de la clase.</p><div id="c_heat"></div></div>
-        <div class="card"><p class="ctitle">Día más fuerte</p><p class="cdesc">Asistencias por día de la semana.</p><div id="c_dow"></div></div>
-      </div>
-      <div class="row r1"><div class="card"><p class="ctitle">Sedes frente a frente</p><p class="cdesc">Asistencias mensuales por sede.</p><div id="c_sedes"></div></div></div>
-    </section>
+      <section class="panel" id="p3">
+        <div class="row r16">
+          <div class="card"><p class="ctitle">Asistencias por día y hora de clase</p><p class="cdesc">Día de la semana y hora de inicio de la clase.</p><div id="c_heat"></div></div>
+          <div class="card"><p class="ctitle">Por día de la semana</p><p class="cdesc">Total de asistencias de cada día.</p><div id="c_dow"></div></div>
+        </div>
+        <div class="row r1"><div class="card"><p class="ctitle">Asistencias por sede</p><p class="cdesc">Total mensual de cada sede.</p><div id="c_sedes"></div></div></div>
+      </section>
 
-    <!-- 5 · Canal -->
-    <section class="panel" id="p4">
-      <div class="row r2">
-        <div class="card"><p class="ctitle">Canal de ingreso según plan</p><p class="cdesc">Porcentaje de las entradas de cada plan por canal.</p><div id="c_cplan"></div></div>
-        <div class="card"><p class="ctitle">¿Cambia el canal con el tiempo?</p><p class="cdesc">Participación de cada canal mes a mes.</p><div id="c_cmes"></div></div>
-      </div>
-      <div class="row r1"><div class="card"><p class="ctitle">El recorrido completo · Plan → Canal → Disciplina</p><p class="cdesc">Arrastra los nodos y pasa el mouse por las bandas para ver los volúmenes.</p><div id="c_sankey"></div></div></div>
-    </section>
+      <section class="panel" id="p4">
+        <div class="row r2">
+          <div class="card"><p class="ctitle">Canal de ingreso según plan</p><p class="cdesc">Porcentaje de las entradas de cada plan por canal.</p><div id="c_cplan"></div></div>
+          <div class="card"><p class="ctitle">Canal de ingreso por mes</p><p class="cdesc">Participación de cada canal en el total mensual.</p><div id="c_cmes"></div></div>
+        </div>
+        <div class="row r1"><div class="card"><p class="ctitle">Flujo: plan, canal y disciplina</p><p class="cdesc">Puedes mover los nodos. El grosor de cada banda es el número de asistencias.</p><div id="c_sankey"></div></div></div>
+      </section>
 
-    <!-- 6 · Datos -->
-    <section class="panel" id="p5">
-      <div class="row r1"><div class="card">
-        <p class="ctitle">Detalle de asistencias</p><p class="cdesc" id="d_tbl"></p>
-        <div class="tbl"><div class="th" id="th"></div><div class="vp" id="vp"><div id="vpin"></div></div></div>
-        <button class="dl" id="dl">⬇ Descargar CSV filtrado</button>
-      </div></div>
-    </section>
+      <section class="panel" id="p5">
+        <div class="row r1"><div class="card">
+          <p class="ctitle">Detalle de asistencias</p><p class="cdesc" id="d_tbl"></p>
+          <div class="tbl"><div class="th" id="th"></div><div class="vp" id="vp"><div id="vpin"></div></div></div>
+          <button class="dl" id="dl">Descargar CSV filtrado</button>
+        </div></div>
+      </section>
 
-    <div class="footer" id="footer"></div>
+      <div class="footer" id="footer"></div>
+    </div>
   </div>
 </main>
 
@@ -282,17 +210,19 @@ button { font-family: inherit; }
 <script>
 (() => {
 "use strict";
-/* ════════════════════════ Constantes y utilidades ════════════════════════ */
+/* ── Constantes ── */
 const D = window.DATA;
-const PINK = "#FF2E93", VIOLET = "#9B6BFF", CYAN = "#27D3F5", AMBER = "#FFB84D";
-const TXT = "#F3EAF7", MUTED = "#A99BB8", GRID = "rgba(255,255,255,0.07)";
+const INK = "#2C2C2C", MUTED = "#7D6B73", GRID = "#F6E6EC", AXIS = "#E6CCD6", WHITE = "#FFFFFF";
+const PINK = "#FF1493", SOFT = "#FFB3CF", CHAR = "#2C2C2C", YEL = "#FFC233", TEAL = "#0FB5AE", VIO = "#6C5CE7";
+const FONT = "Barlow, system-ui, sans-serif", DISP = "Barlow Condensed, Arial Narrow, sans-serif";
 const MES = ["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"];
 const DIAS = ["Lun","Mar","Mié","Jue","Vie","Sáb","Dom"];
 const PLANES = D.planes, DISC = D.disc, SEDES = D.sedes, CANALES = ["App","Código QR","Recepción"];
-const C_DISC = {CrossFit: PINK, Spinning: CYAN, Yoga: VIOLET, Pilates: AMBER};
-const C_PLAN = {"Básico": CYAN, Plus: VIOLET, Premium: PINK};
-const C_CANAL = {"App": PINK, "Código QR": VIOLET, "Recepción": CYAN};
-const C_SEDE = {"Sede Norte": PINK, "Sede Centro": CYAN};
+const C_DISC = {CrossFit: PINK, Spinning: TEAL, Yoga: YEL, Pilates: VIO};
+const C_PLAN = {"Básico": SOFT, Plus: PINK, Premium: CHAR};
+const C_CANAL = {"App": PINK, "Código QR": TEAL, "Recepción": YEL};
+const C_SEDE = {"Sede Norte": PINK, "Sede Centro": CHAR};
+const HEAT = [[0, "#FFF0F5"], [.2, "#FFC9DD"], [.5, "#FF66AA"], [.8, "#FF1493"], [1, "#7D0A48"]];
 const DAY = 86400000, BASE = Date.parse(D.f0 + "T00:00:00Z");
 const $ = s => document.querySelector(s);
 const pad2 = n => String(n).padStart(2, "0");
@@ -300,36 +230,31 @@ const miles = n => Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."
 const dec1 = n => n.toFixed(1).replace(".", ",");
 const hhmm = h => { const m = Math.round(h * 60); return pad2(Math.floor(m / 60)) + ":" + pad2(m % 60); };
 const rgba = (hex, a) => { const h = hex.slice(1); return `rgba(${parseInt(h.slice(0,2),16)},${parseInt(h.slice(2,4),16)},${parseInt(h.slice(4,6),16)},${a})`; };
+const lum = hex => { const h = hex.slice(1), c = [0, 2, 4].map(i => parseInt(h.slice(i, i + 2), 16)); return .299 * c[0] + .587 * c[1] + .114 * c[2]; };
+const textOn = hex => lum(hex) > 150 ? INK : WHITE;
 const dayDate = d => new Date(BASE + d * DAY);
-const fechaEs = d => `${d.getUTCDate()} ${MES[d.getUTCMonth()]} ${d.getUTCFullYear()}`;
+const fechaEs = d => `${d.getUTCDate()} ${MES[d.getUTCMonth()].toLowerCase()} ${d.getUTCFullYear()}`;
 const isoOf = d => dayDate(d).toISOString().slice(0, 10);
 const dayOfIso = s => Math.round((Date.parse(s + "T00:00:00Z") - BASE) / DAY);
 const argmax = a => a.reduce((b, v, i) => v > a[b] ? i : b, 0);
 const argmin = a => a.reduce((b, v, i) => v < a[b] ? i : b, 0);
-const quantile = (sorted, q) => { const p = (sorted.length - 1) * q, lo = Math.floor(p), fr = p - lo; return sorted[lo] + (sorted[Math.min(lo + 1, sorted.length - 1)] - sorted[lo]) * fr; };
+const quantile = (s, q) => { const p = (s.length - 1) * q, lo = Math.floor(p); return s[lo] + (s[Math.min(lo + 1, s.length - 1)] - s[lo]) * (p - lo); };
 
-/* ════════════════════════ Datos precalculados por fila ════════════════════════ */
+/* ── Datos por fila ── */
 const N = D.dia.length;
-const rDay = Int16Array.from(D.dia), rMin = Int16Array.from(D.min);
-const rSoc = Int16Array.from(D.socio), rCanal = Uint8Array.from(D.canal);
+const rDay = Int16Array.from(D.dia), rMin = Int16Array.from(D.min), rSoc = Int16Array.from(D.socio), rCanal = Uint8Array.from(D.canal);
 const rPlan = new Uint8Array(N), rDisc = new Uint8Array(N), rSede = new Uint8Array(N), rHC = new Uint8Array(N), rDow = new Uint8Array(N), rMon = new Int16Array(N);
-const maxDay = Math.max(...D.dia);
-const dMon = [], dDow = [];
+const maxDay = Math.max(...D.dia), dMon = [], dDow = [];
 for (let d = 0; d <= maxDay + 1; d++) { const dt = dayDate(d); dMon.push(dt.getUTCFullYear() * 12 + dt.getUTCMonth()); dDow.push((dt.getUTCDay() + 6) % 7); }
-for (let i = 0; i < N; i++) {
-  const c = D.clases[D.clase[i]];
-  rPlan[i] = D.socios[rSoc[i]][1]; rDisc[i] = c[0]; rSede[i] = c[1]; rHC[i] = c[2];
-  rDow[i] = dDow[rDay[i]]; rMon[i] = dMon[rDay[i]];
-}
+for (let i = 0; i < N; i++) { const c = D.clases[D.clase[i]]; rPlan[i] = D.socios[rSoc[i]][1]; rDisc[i] = c[0]; rSede[i] = c[1]; rHC[i] = c[2]; rDow[i] = dDow[rDay[i]]; rMon[i] = dMon[rDay[i]]; }
 const now = new Date(), HOY = Math.round((Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()) - BASE) / DAY);
 const planesOn = PLANES.filter((_, k) => rPlan.includes(k));
 
-/* ════════════════════════ Estado y filtros ════════════════════════ */
+/* ── Estado y filtros ── */
 const S = { pasado: true, d0: 0, d1: 0, vista: "Total", tab: 0,
   sel: { sede: new Set(SEDES.map((_, i) => i)), plan: new Set(PLANES.map((_, i) => i)), disc: new Set(DISC.map((_, i) => i)), canal: new Set([0, 1, 2]) } };
 const OPT = { sede: SEDES, plan: PLANES, disc: DISC, canal: CANALES };
-const PILL_BOX = { sede: "#pSede", plan: "#pPlan", disc: "#pDisc", canal: "#pCanal" };
-
+const BOX = { sede: "#pSede", plan: "#pPlan", disc: "#pDisc", canal: "#pCanal" };
 function baseRange() {
   let lo = 1e9, hi = -1e9;
   for (let i = 0; i < N; i++) { if (S.pasado && rDay[i] > HOY) continue; if (rDay[i] < lo) lo = rDay[i]; if (rDay[i] > hi) hi = rDay[i]; }
@@ -340,287 +265,254 @@ function syncDates() {
   for (const id of ["d0", "d1"]) { $("#" + id).min = isoOf(lo); $("#" + id).max = isoOf(hi); }
   S.d0 = lo; S.d1 = hi; $("#d0").value = isoOf(lo); $("#d1").value = isoOf(hi);
 }
-function drawPills(k) {
-  const box = $(PILL_BOX[k]); box.innerHTML = "";
+function drawChecks(k) {
+  const box = $(BOX[k]); box.innerHTML = "";
   OPT[k].forEach((name, i) => {
-    const b = document.createElement("button"); b.className = "pill" + (S.sel[k].has(i) ? " on" : ""); b.textContent = name;
-    b.onclick = () => { S.sel[k].has(i) ? S.sel[k].delete(i) : S.sel[k].add(i); drawPills(k); update(); };
-    box.appendChild(b);
+    const l = document.createElement("label"), c = document.createElement("input");
+    l.className = "chk"; c.type = "checkbox"; c.checked = S.sel[k].has(i);
+    c.onchange = () => { c.checked ? S.sel[k].add(i) : S.sel[k].delete(i); update(); };
+    l.append(c, document.createTextNode(name)); box.appendChild(l);
   });
 }
 function resetFilters() {
   S.pasado = true; $("#fPasado").checked = true; syncDates();
-  for (const k of Object.keys(S.sel)) { S.sel[k] = new Set(OPT[k].map((_, i) => i)); drawPills(k); }
+  for (const k of Object.keys(S.sel)) { S.sel[k] = new Set(OPT[k].map((_, i) => i)); drawChecks(k); }
   update();
 }
 
-/* ════════════════════════ Agregados del filtro actual ════════════════════════ */
+/* ── Agregados ── */
 let F, A;
 function compute() {
-  const hi = S.pasado ? Math.min(S.d1, HOY) : S.d1;
-  const ok = {}; for (const k of Object.keys(S.sel)) { const all = S.sel[k].size === 0; ok[k] = Array.from({length: OPT[k].length}, (_, i) => all || S.sel[k].has(i)); }
+  const hi = S.pasado ? Math.min(S.d1, HOY) : S.d1, ok = {};
+  for (const k of Object.keys(S.sel)) { const all = S.sel[k].size === 0; ok[k] = OPT[k].map((_, i) => all || S.sel[k].has(i)); }
   const idx = [];
-  for (let i = 0; i < N; i++) {
-    const d = rDay[i];
-    if (d < S.d0 || d > hi) continue;
-    if (!ok.sede[rSede[i]] || !ok.plan[rPlan[i]] || !ok.disc[rDisc[i]] || !ok.canal[rCanal[i]]) continue;
-    idx.push(i);
-  }
+  for (let i = 0; i < N; i++) { const d = rDay[i]; if (d < S.d0 || d > hi) continue; if (!ok.sede[rSede[i]] || !ok.plan[rPlan[i]] || !ok.disc[rDisc[i]] || !ok.canal[rCanal[i]]) continue; idx.push(i); }
   F = idx; if (!F.length) { A = null; return; }
   let pmin = 1e9, pmax = -1, dmax = -1; const days = new Set(), socs = new Set();
   for (const i of F) { if (rMon[i] < pmin) pmin = rMon[i]; if (rMon[i] > pmax) pmax = rMon[i]; if (rDay[i] > dmax) dmax = rDay[i]; days.add(rDay[i]); socs.add(rSoc[i]); }
-  const P = pmax - pmin + 1, periods = Array.from({length: P}, (_, k) => pmin + k);
-  const years = new Set(periods.map(p => Math.floor(p / 12)));
+  const P = pmax - pmin + 1, periods = Array.from({length: P}, (_, k) => pmin + k), years = new Set(periods.map(p => Math.floor(p / 12)));
   const etq = periods.map(p => years.size > 1 ? `${MES[p % 12]} ${String(Math.floor(p / 12)).slice(2)}` : MES[p % 12]);
-  const mensual = new Array(P).fill(0), socM = Array.from({length: P}, () => new Set()), hS = new Array(P).fill(0), canalCnt = [0, 0, 0];
-  let hSum = 0;
-  for (const i of F) { const k = rMon[i] - pmin; mensual[k]++; socM[k].add(rSoc[i]); const h = rMin[i] / 60; hS[k] += h; hSum += h; canalCnt[rCanal[i]]++; }
-  const horaMes = hS.map((s, k) => mensual[k] ? s / mensual[k] : NaN);
-  for (let k = 1; k < P; k++) if (isNaN(horaMes[k])) horaMes[k] = horaMes[k - 1];
-  for (let k = P - 2; k >= 0; k--) if (isNaN(horaMes[k])) horaMes[k] = horaMes[k + 1];
+  const mensual = new Array(P).fill(0), canalCnt = [0, 0, 0]; let hSum = 0;
+  for (const i of F) { mensual[rMon[i] - pmin]++; hSum += rMin[i] / 60; canalCnt[rCanal[i]]++; }
   const total = F.length, cTop = argmax(canalCnt);
-  A = { total, pmin, P, periods, etq, mensual, socM: socM.map(s => s.size), horaMes, socios: socs.size, nDias: days.size, dmax,
-        visitasSocio: total / socs.size, horaMedia: hSum / total, canalCnt, canalTop: CANALES[cTop], canalPct: canalCnt[cTop] / total * 100,
-        ip: argmax(mensual), iv: argmin(mensual) };
+  A = { total, pmin, P, periods, etq, mensual, socios: socs.size, nDias: days.size, dmax, visitasSocio: total / socs.size, horaMedia: hSum / total,
+        canalCnt, canalTop: CANALES[cTop], canalPct: canalCnt[cTop] / total * 100, ip: argmax(mensual), iv: argmin(mensual) };
 }
 const countBy = (key, n) => { const c = new Array(n).fill(0); for (const i of F) c[key[i]]++; return c; };
 
-/* ════════════════════════ Plotly: helpers ════════════════════════ */
+/* ── Plotly ── */
 const isObj = o => o && typeof o === "object" && !Array.isArray(o);
 const merge = (a, b) => { const r = {...a}; for (const k in b) r[k] = isObj(a[k]) && isObj(b[k]) ? merge(a[k], b[k]) : b[k]; return r; };
 function mk(h, legend = true, t = 30, extra = {}) {
-  const ax = { gridcolor: GRID, zeroline: false, linecolor: GRID, tickfont: {color: MUTED}, automargin: true };
+  const ax = { gridcolor: GRID, zeroline: false, linecolor: AXIS, tickfont: {color: MUTED}, automargin: true };
   return merge({
     height: h, paper_bgcolor: "rgba(0,0,0,0)", plot_bgcolor: "rgba(0,0,0,0)", separators: ",.",
-    font: {family: "Poppins, sans-serif", color: TXT, size: 13}, margin: {l: 8, r: 8, t: t, b: 8},
-    hoverlabel: {bgcolor: "#1B1424", bordercolor: PINK, font: {family: "Poppins, sans-serif", color: "#fff", size: 13}},
-    showlegend: legend, legend: {orientation: "h", y: 1.1, x: 0, bgcolor: "rgba(0,0,0,0)", font: {size: 12}},
+    font: {family: FONT, color: INK, size: 13}, margin: {l: 8, r: 8, t: t, b: 8},
+    hoverlabel: {bgcolor: WHITE, bordercolor: PINK, font: {family: FONT, color: INK, size: 13}},
+    showlegend: legend, legend: {orientation: "h", y: 1.1, x: 0, bgcolor: "rgba(0,0,0,0)", font: {size: 13}},
     xaxis: {...ax}, yaxis: {...ax}
   }, extra);
 }
 function draw(id, data, layout, frames) {
-  const el = document.getElementById(id);
-  Plotly.purge(el);
+  const el = document.getElementById(id); Plotly.purge(el);
   const p = Plotly.newPlot(el, data, layout, {displayModeBar: false, responsive: true});
   if (frames) p.then(() => Plotly.addFrames(el, frames));
 }
-function spark(vals, color, w = 130, h = 34) {
-  if (vals.length < 2) return "";
-  const lo = Math.min(...vals), hi = Math.max(...vals), rng = (hi - lo) || 1;
-  const xs = vals.map((_, i) => 2 + i * (w - 4) / (vals.length - 1)), ys = vals.map(v => (h - 4) - (v - lo) / rng * (h - 10));
-  const pts = xs.map((x, i) => `${x.toFixed(1)},${ys[i].toFixed(1)}`).join(" "), gid = "sg" + (spark.n = (spark.n || 0) + 1);
-  return `<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none"><defs><linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${color}" stop-opacity=".45"/><stop offset="1" stop-color="${color}" stop-opacity="0"/></linearGradient></defs><polygon points="2,${h} ${pts} ${w - 2},${h}" fill="url(#${gid})"/><polyline points="${pts}" fill="none" stroke="${color}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="${xs[xs.length - 1].toFixed(1)}" cy="${ys[ys.length - 1].toFixed(1)}" r="3" fill="${color}"/></svg>`;
-}
 
-/* ════════════════════════ Cabecera: hero, KPIs, hallazgos ════════════════════════ */
+/* ── Encabezado ── */
 function renderTop() {
   const nSed = new Set(F.map(i => rSede[i])).size, nDis = new Set(F.map(i => rDisc[i])).size;
-  $("#hero").innerHTML = `<div class="eyebrow">Tablero de asistencia</div><h1>Asistencia en la cadena de gimnasios</h1>
-  <p>Cuántos socios llegan, cuándo y por dónde ingresan. Explora con los filtros de la izquierda, pasa el mouse por los gráficos y dale <b>Play</b> a la carrera de disciplinas.</p>
-  <div class="chips"><span class="chip"><span class="dot"></span>${fechaEs(dayDate(S.d0))} → ${fechaEs(dayDate(A.dmax))}</span>
-  <span class="chip">🏢 ${nSed} sede${nSed !== 1 ? "s" : ""}</span><span class="chip">🧘 ${nDis} disciplina${nDis !== 1 ? "s" : ""}</span><span class="chip">👥 ${A.socios} socios activos</span></div>`;
-  const visMes = A.mensual.map((m, k) => m / Math.max(A.socM[k], 1));
+  $("#hero").innerHTML = `<h1>Asistencia en la cadena de <em>gimnasios</em></h1>
+  <p class="lead">Asistencias a clases por mes, disciplina, plan y canal de ingreso. Los filtros de la izquierda se aplican a todas las pestañas.</p>
+  <p class="meta">${fechaEs(dayDate(S.d0))} – ${fechaEs(dayDate(A.dmax))} · ${nSed} sede${nSed !== 1 ? "s" : ""} · ${nDis} disciplina${nDis !== 1 ? "s" : ""} · ${A.socios} socios</p>`;
   const kp = [
-    ["Asistencias totales", miles(A.total), `≈ ${miles(A.total / Math.max(1, A.nDias))} por día con actividad`, PINK, spark(A.mensual, PINK)],
-    ["Pico", miles(A.mensual[A.ip]), `${A.etq[A.ip]} · mes más fuerte`, AMBER, spark(A.mensual, AMBER)],
-    ["Valle", miles(A.mensual[A.iv]), `${A.etq[A.iv]} · mes más flojo`, CYAN, spark(A.mensual, CYAN)],
-    ["Socios activos", A.socios, "con al menos una visita", VIOLET, spark(A.socM, VIOLET)],
-    ["Visitas por socio", miles(A.visitasSocio), "promedio del periodo", PINK, spark(visMes, PINK)],
-    ["Hora media de llegada", hhmm(A.horaMedia), `canal líder: ${A.canalTop} (${A.canalPct.toFixed(0)} %)`, VIOLET, spark(A.horaMes, VIOLET)]];
-  $("#kpis").innerHTML = kp.map(([l, v, s, c, sp], i) => `<div class="kpi" style="--c:${c};animation-delay:${i * 70}ms"><div class="lab">${l}</div><div class="val">${v}</div><div class="sub">${s}</div>${sp}</div>`).join("");
+    ["Asistencias totales", miles(A.total), `unas ${miles(A.total / Math.max(1, A.nDias))} por día con actividad`, "k-pink"],
+    ["Mes pico", miles(A.mensual[A.ip]), A.etq[A.ip], "k-char"],
+    ["Mes valle", miles(A.mensual[A.iv]), A.etq[A.iv], "k-soft"],
+    ["Socios activos", A.socios, "con al menos una visita", ""],
+    ["Visitas por socio", miles(A.visitasSocio), "promedio del periodo", ""],
+    ["Hora media de llegada", hhmm(A.horaMedia), `canal principal: ${A.canalTop} (${A.canalPct.toFixed(0)} %)`, ""]];
+  $("#kpis").innerHTML = kp.map(([l, v, s, c]) => `<div class="kpi ${c}"><div class="lab">${l}</div><div class="val">${v}</div><div class="sub">${s}</div></div>`).join("");
 
-  const ins = [];
+  const st = [];
   if (A.mensual.length > 1 && A.mensual[A.ip] > 0)
-    ins.push(["📉", `De <b>${A.etq[A.ip]}</b> a <b>${A.etq[A.iv]}</b> la asistencia cae <b>${((1 - A.mensual[A.iv] / A.mensual[A.ip]) * 100).toFixed(0)} %</b> (${miles(A.mensual[A.ip])} → ${miles(A.mensual[A.iv])}).`]);
+    st.push([`−${((1 - A.mensual[A.iv] / A.mensual[A.ip]) * 100).toFixed(0)} %`, `de asistencia entre ${A.etq[A.ip]} (${miles(A.mensual[A.ip])}) y ${A.etq[A.iv]} (${miles(A.mensual[A.iv])}).`]);
   const hp = PLANES.map((_, k) => { let s = 0, c = 0; for (const i of F) if (rPlan[i] === k) { s += rMin[i] / 60; c++; } return c ? s / c : null; });
   const pres = hp.map((v, k) => v === null ? null : k).filter(k => k !== null);
   if (pres.length > 1) {
     const a = pres.reduce((b, k) => hp[k] < hp[b] ? k : b), b = pres.reduce((x, k) => hp[k] > hp[x] ? k : x), dif = (hp[b] - hp[a]) * 60;
-    ins.push(["🌅", `<b>${PLANES[a]}</b> llega en promedio a las <b>${hhmm(hp[a])}</b>, ${Math.floor(dif / 60)} h ${pad2(Math.floor(dif % 60))} min antes que <b>${PLANES[b]}</b> (${hhmm(hp[b])}).`]);
+    st.push([`${Math.floor(dif / 60)} h ${pad2(Math.floor(dif % 60))} min`, `de diferencia al llegar: los socios ${PLANES[a]} lo hacen a las ${hhmm(hp[a])} y los ${PLANES[b]} a las ${hhmm(hp[b])}.`]);
   }
   const dc = countBy(rDisc, DISC.length), dTop = argmax(dc);
-  ins.push(["🏆", `<b>${DISC[dTop]}</b> lidera con <b>${miles(dc[dTop])}</b> asistencias (${(dc[dTop] / A.total * 100).toFixed(0)} % del total). El canal más usado es <b>${A.canalTop}</b>.`]);
-  $("#ins").innerHTML = ins.map(([e, t], i) => `<div class="ins" style="animation-delay:${i * 120}ms"><span class="em">${e}</span>${t}</div>`).join("");
-  $("#footer").textContent = `Hecho con Plotly · ${miles(N)} asistencias en la base · datos sintéticos`;
+  st.push([`${(dc[dTop] / A.total * 100).toFixed(0)} %`, `de las asistencias son de ${DISC[dTop]} (${miles(dc[dTop])}), la disciplina más concurrida. El canal más usado es ${A.canalTop}.`]);
+  $("#ins").innerHTML = st.map(([b, t]) => `<div class="stat"><b>${b}</b><span>${t}</span></div>`).join("");
+  $("#footer").textContent = `Datos sintéticos generados para probar el modelo · ${miles(N)} asistencias en la base.`;
 }
 
-/* ════════════════════════ 1 · Evolución ════════════════════════ */
+/* ── 1 · Evolución ── */
 function chartMes() {
   const {etq, mensual, ip, iv, periods} = A; let data, extra = {}; const ann = [];
+  const lab = (x, y, text, ax, ay, col) => ({x, y, text, ax, ay, showarrow: true, arrowcolor: col, arrowwidth: 2, arrowhead: 0, font: {family: DISP, size: 17, color: col}});
   if (S.vista === "Total") {
-    data = [{type: "scatter", x: etq, y: mensual, mode: "lines+markers", line: {color: PINK, width: 4, shape: "spline", smoothing: .6},
-      marker: {size: 9, color: PINK, line: {width: 2, color: "#0E0A14"}}, fill: "tozeroy",
-      fillgradient: {type: "vertical", colorscale: [[0, rgba(PINK, 0)], [1, rgba(PINK, .6)]]}, name: "Asistencias",
-      hovertemplate: "<b>%{x}</b><br>%{y:,.0f} asistencias<extra></extra>"},
-      {type: "scatter", x: [etq[ip], etq[iv]], y: [mensual[ip], mensual[iv]], mode: "markers", marker: {size: [20, 20], color: [AMBER, CYAN], line: {width: 3, color: "#0E0A14"}}, hoverinfo: "skip", showlegend: false}];
-    ann.push({x: etq[ip], y: mensual[ip], text: `<b>Pico</b> · ${miles(mensual[ip])}`, ax: 48, ay: -12, arrowcolor: AMBER, font: {color: AMBER}, arrowwidth: 1.6, arrowhead: 2, showarrow: true});
-    ann.push({x: etq[iv], y: mensual[iv], text: `<b>Valle</b> · ${miles(mensual[iv])}`, ax: 0, ay: -46, arrowcolor: CYAN, font: {color: CYAN}, arrowwidth: 1.6, arrowhead: 2, showarrow: true});
+    data = [{type: "scatter", x: etq, y: mensual, mode: "lines+markers", line: {color: PINK, width: 3.5}, marker: {size: 9, color: WHITE, line: {width: 3, color: PINK}},
+      fill: "tozeroy", fillcolor: rgba(PINK, .13), name: "Asistencias", hovertemplate: "<b>%{x}</b><br>%{y:,.0f} asistencias<extra></extra>"},
+      {type: "scatter", x: [etq[ip], etq[iv]], y: [mensual[ip], mensual[iv]], mode: "markers", marker: {size: 14, color: [PINK, CHAR], line: {width: 3, color: WHITE}}, hoverinfo: "skip", showlegend: false}];
+    ann.push(lab(etq[ip], mensual[ip], `PICO ${miles(mensual[ip])}`, 58, -4, PINK));
+    ann.push(lab(etq[iv], mensual[iv], `VALLE ${miles(mensual[iv])}`, 0, -44, CHAR));
   } else {
-    const [key, n, names, pal, k0] = {Disciplina: [rDisc, DISC.length, DISC, C_DISC], Sede: [rSede, SEDES.length, SEDES, C_SEDE], Plan: [rPlan, PLANES.length, PLANES, C_PLAN]}[S.vista];
+    const [key, names, pal] = {Disciplina: [rDisc, DISC, C_DISC], Sede: [rSede, SEDES, C_SEDE], Plan: [rPlan, PLANES, C_PLAN]}[S.vista];
     const piv = names.map(() => new Array(A.P).fill(0)); for (const i of F) piv[key[i]][rMon[i] - A.pmin]++;
-    data = names.map((nm, j) => ({type: "scatter", x: etq, y: piv[j], name: nm, mode: "lines", stackgroup: "uno", line: {width: 1.5, color: pal[nm] || PINK, shape: "spline", smoothing: .5},
-      fillcolor: rgba(pal[nm] || PINK, .55), hovertemplate: `<b>%{x}</b> · ${nm}<br>%{y:,.0f}<extra></extra>`})).filter((_, j) => piv[j].some(v => v > 0));
+    data = names.map((nm, j) => ({type: "scatter", x: etq, y: piv[j], name: nm, mode: "lines", stackgroup: "uno", line: {width: 1.5, color: WHITE},
+      fillcolor: pal[nm] || PINK, hovertemplate: `<b>%{x}</b> · ${nm}<br>%{y:,.0f}<extra></extra>`})).filter((_, j) => piv[j].some(v => v > 0));
     extra.hovermode = "x unified";
   }
-  const vac = periods.map((p, k) => [p % 12, k]).filter(([m]) => m === 5 || m === 6).map(([, k]) => k);
-  const shapes = [];
+  const vac = periods.map((p, k) => [p % 12, k]).filter(([m]) => m === 5 || m === 6).map(([, k]) => k), shapes = [];
   if (vac.length && periods.length > 4) {
-    shapes.push({type: "rect", xref: "x", yref: "paper", x0: Math.min(...vac) - .5, x1: Math.max(...vac) + .5, y0: 0, y1: 1, fillcolor: "rgba(39,211,245,.07)", line: {width: 0}, layer: "below"});
-    ann.push({x: Math.min(...vac) - .5, xref: "x", y: 1, yref: "paper", text: "Vacaciones", showarrow: false, xanchor: "left", yanchor: "top", font: {color: CYAN, size: 11}});
+    shapes.push({type: "rect", xref: "x", yref: "paper", x0: Math.min(...vac) - .5, x1: Math.max(...vac) + .5, y0: 0, y1: 1, fillcolor: "rgba(44,44,44,.05)", line: {width: 0}, layer: "below"});
+    ann.push({x: Math.min(...vac) - .5, xref: "x", y: 1, yref: "paper", text: "VACACIONES", showarrow: false, xanchor: "left", yanchor: "top", font: {family: DISP, color: MUTED, size: 14}});
   }
   draw("c_mes", data, mk(430, S.vista !== "Total", 30, merge(extra, {shapes, annotations: ann,
     yaxis: {title: {text: null}, rangemode: "tozero"}, xaxis: {title: {text: null}, categoryorder: "array", categoryarray: etq}})));
 }
 function renderEvolucion() {
   chartMes();
-  const cc = A.canalCnt, top = argmax(cc);
-  draw("c_dona", [{type: "pie", labels: CANALES, values: cc, hole: .68, sort: false, direction: "clockwise",
-    marker: {colors: CANALES.map(c => C_CANAL[c]), line: {color: "#0E0A14", width: 4}}, pull: cc.map((_, i) => i === top ? .04 : 0),
-    textinfo: "percent", textfont: {color: "#fff", size: 14}, insidetextorientation: "horizontal",
+  const cc = A.canalCnt;
+  draw("c_dona", [{type: "pie", labels: CANALES, values: cc, hole: .6, sort: false, direction: "clockwise",
+    marker: {colors: CANALES.map(c => C_CANAL[c]), line: {color: WHITE, width: 3}}, textinfo: "percent", textfont: {family: DISP, size: 17},
     hovertemplate: "<b>%{label}</b><br>%{value:,.0f} asistencias<br>%{percent}<extra></extra>"}],
-    mk(430, true, 30, {annotations: [{text: `<b>${A.canalTop}</b><br><span style='font-size:13px;color:${MUTED}'>${A.canalPct.toFixed(0)} % de las entradas</span>`, showarrow: false, font: {size: 22, color: "#fff"}}],
-      legend: {orientation: "h", y: -.02, x: .5, xanchor: "center"}}));
-  // calendario
+    mk(430, true, 30, {annotations: [{text: `<b>${A.canalPct.toFixed(0)} %</b>`, showarrow: false, y: .55, font: {family: DISP, size: 44, color: INK}},
+      {text: `por ${A.canalTop}`, showarrow: false, y: .42, font: {size: 14, color: MUTED}}], legend: {orientation: "h", y: -.02, x: .5, xanchor: "center"}}));
   const diario = new Map(); for (const i of F) diario.set(rDay[i], (diario.get(rDay[i]) || 0) + 1);
   const d0 = S.d0, last = A.dmax, lunes0 = d0 - dDow[d0], nsem = Math.floor((last - lunes0) / 7) + 1;
   const z = Array.from({length: 7}, () => new Array(nsem).fill(null)), txt = Array.from({length: 7}, () => new Array(nsem).fill("")), marcas = {};
   for (let d = d0; d <= last; d++) {
     const s = Math.floor((d - lunes0) / 7), w = dDow[d], v = diario.get(d) || 0, dt = dayDate(d);
     z[w][s] = v; txt[w][s] = `${DIAS[w]} ${dt.getUTCDate()} ${MES[dt.getUTCMonth()]} ${dt.getUTCFullYear()}<br><b>${v}</b> asistencias`;
-    if ((dt.getUTCDate() <= 7 && w === 0) || d === d0) marcas[s] = MES[dt.getUTCMonth()];
+    if (dt.getUTCDate() <= 7 && w === 0) marcas[s] = MES[dt.getUTCMonth()];
   }
-  draw("c_cal", [{type: "heatmap", z, x: Array.from({length: nsem}, (_, i) => i), y: DIAS, text: txt, hoverinfo: "text", xgap: 3, ygap: 3,
-    colorscale: [[0, "#1B1424"], [.05, "#3A1646"], [.35, "#8E1B6B"], [.7, "#E0207F"], [1, "#FF7FBF"]], colorbar: {thickness: 10, len: .9, tickfont: {color: MUTED}, outlinewidth: 0}}],
-    mk(250, false, 10, {yaxis: {autorange: "reversed", showgrid: false, linecolor: "rgba(0,0,0,0)"},
-      xaxis: {showgrid: false, linecolor: "rgba(0,0,0,0)", tickmode: "array", tickvals: Object.keys(marcas).map(Number), ticktext: Object.values(marcas)}}));
+  draw("c_cal", [{type: "heatmap", z, x: Array.from({length: nsem}, (_, i) => i), y: DIAS, text: txt, hoverinfo: "text", xgap: 3, ygap: 3, colorscale: HEAT,
+    colorbar: {thickness: 10, len: .9, tickfont: {color: MUTED}, outlinewidth: 0}}],
+    mk(260, false, 10, {yaxis: {autorange: "reversed", showgrid: false, linecolor: "rgba(0,0,0,0)"},
+      xaxis: {showgrid: false, linecolor: "rgba(0,0,0,0)", tickangle: 0, tickfont: {family: DISP, size: 15, color: INK}, tickmode: "array", tickvals: Object.keys(marcas).map(Number), ticktext: Object.values(marcas)}}));
 }
 
-/* ════════════════════════ 2 · Carrera de disciplinas ════════════════════════ */
+/* ── 2 · Disciplinas ── */
 function renderCarrera() {
   const {etq, P, pmin} = A, per = DISC.map(() => new Array(P).fill(0)); for (const i of F) per[rDisc[i]][rMon[i] - pmin]++;
   const present = DISC.map((_, j) => j).filter(j => per[j].some(v => v > 0)), cum = per.map(a => { let s = 0; return a.map(v => s += v); });
-  const fin = present.map(j => [j, cum[j][P - 1]]).sort((a, b) => a[1] - b[1]);
-  const xmax = Math.max(...present.map(j => cum[j][P - 1])) * 1.22;
+  const fin = present.map(j => [j, cum[j][P - 1]]).sort((a, b) => a[1] - b[1]), xmax = Math.max(...present.map(j => cum[j][P - 1])) * 1.2;
   const bar = (j, k) => ({x: [cum[j][k]], y: [DISC[j]], text: [miles(cum[j][k])]});
-  const data = present.map(j => ({type: "bar", name: DISC[j], orientation: "h", ...bar(j, 0), marker: {color: C_DISC[DISC[j]], cornerradius: 10},
-    textposition: "outside", cliponaxis: false, textfont: {color: "#fff", size: 15}, hovertemplate: `<b>${DISC[j]}</b><br>%{x:,.0f} acumuladas<extra></extra>`}));
+  const data = present.map(j => ({type: "bar", name: DISC[j], orientation: "h", ...bar(j, 0), marker: {color: C_DISC[DISC[j]]}, textposition: "outside", cliponaxis: false,
+    textfont: {family: DISP, color: WHITE, size: 20}, hovertemplate: `<b>${DISC[j]}</b><br>%{x:,.0f} acumuladas<extra></extra>`}));
   const frames = etq.map((e, k) => ({name: e, traces: present.map((_, i) => i), data: present.map(j => bar(j, k))}));
-  draw("c_race", data, mk(520, false, 10, {margin: {l: 8, r: 30, t: 10, b: 8}, bargap: .28,
-    xaxis: {range: [0, xmax], gridcolor: GRID, zeroline: false},
-    yaxis: {categoryorder: "array", categoryarray: fin.map(([j]) => DISC[j]), tickfont: {size: 15, color: "#fff"}, gridcolor: "rgba(0,0,0,0)"},
-    updatemenus: [{type: "buttons", direction: "left", showactive: false, x: 0, y: -.05, xanchor: "left", yanchor: "top", pad: {t: 8}, bgcolor: "#2A1A36", bordercolor: PINK, font: {color: "#fff", size: 13},
-      buttons: [{label: "▶  Reproducir", method: "animate", args: [null, {frame: {duration: 900, redraw: true}, fromcurrent: true, mode: "immediate", transition: {duration: 750, easing: "cubic-in-out"}}]},
-                {label: "❚❚  Pausa", method: "animate", args: [[null], {frame: {duration: 0, redraw: false}, mode: "immediate", transition: {duration: 0}}]}]}],
-    sliders: [{active: 0, x: .26, len: .74, y: -.05, yanchor: "top", pad: {t: 8, b: 0}, bgcolor: "#2A1A36", activebgcolor: PINK, bordercolor: "rgba(255,255,255,.15)", tickcolor: "rgba(255,255,255,.3)", font: {color: MUTED, size: 11},
-      currentvalue: {prefix: "Mes: ", font: {color: PINK, size: 15}, xanchor: "left"},
+  const LT = "#CDBAC2";
+  draw("c_race", data, mk(520, false, 10, {margin: {l: 8, r: 36, t: 10, b: 8}, bargap: .32, font: {color: WHITE},
+    xaxis: {range: [0, xmax], gridcolor: "rgba(255,255,255,.12)", zeroline: false, linecolor: "rgba(255,255,255,.2)", tickfont: {color: LT}},
+    yaxis: {categoryorder: "array", categoryarray: fin.map(([j]) => DISC[j]), tickfont: {family: DISP, size: 20, color: WHITE}, showgrid: false},
+    updatemenus: [{type: "buttons", direction: "left", showactive: false, x: 0, y: -.05, xanchor: "left", yanchor: "top", pad: {t: 8}, bgcolor: PINK, bordercolor: PINK, font: {color: WHITE, size: 14, family: DISP},
+      buttons: [{label: "  REPRODUCIR  ", method: "animate", args: [null, {frame: {duration: 900, redraw: true}, fromcurrent: true, mode: "immediate", transition: {duration: 700, easing: "cubic-in-out"}}]},
+                {label: "  PAUSA  ", method: "animate", args: [[null], {frame: {duration: 0, redraw: false}, mode: "immediate", transition: {duration: 0}}]}]}],
+    sliders: [{active: 0, x: .3, len: .7, y: -.05, yanchor: "top", pad: {t: 8, b: 0}, bgcolor: "#4A4144", activebgcolor: PINK, bordercolor: "#6a5d62", tickcolor: "#6a5d62", font: {color: LT, size: 12},
+      currentvalue: {prefix: "MES  ", font: {color: WHITE, size: 17, family: DISP}, xanchor: "left"},
       steps: etq.map(e => ({method: "animate", label: e, args: [[e], {mode: "immediate", frame: {duration: 0, redraw: true}, transition: {duration: 600}}]}))}]}), frames);
-  const med = ["🥇", "🥈", "🥉", "4º"];
-  $("#rank").innerHTML = fin.slice().reverse().map(([j, v], i) => `<div class="rank" style="--c:${C_DISC[DISC[j]]}"><span class="pos">${med[Math.min(i, 3)]}</span><div><div class="nm">${DISC[j]}</div><div class="ds">${dec1(v / A.total * 100)} % del total</div></div><div class="vv">${miles(v)}<small>asistencias</small></div></div>`).join("");
-  draw("c_ritmo", present.map(j => ({type: "scatter", x: etq, y: per[j], name: DISC[j], mode: "lines", line: {color: C_DISC[DISC[j]], width: 2.6, shape: "spline"}, hovertemplate: `<b>%{x}</b> · ${DISC[j]}: %{y:,.0f}<extra></extra>`})),
-    mk(230, false, 10, {hovermode: "x unified", yaxis: {rangemode: "tozero"}, xaxis: {tickangle: 0, tickfont: {size: 10, color: MUTED}, tickvals: etq.filter((_, k) => k % 2 === 0), categoryorder: "array", categoryarray: etq}}));
-  // sunburst sede → disciplina → plan
+  const maxV = fin[fin.length - 1][1];
+  $("#rank").innerHTML = fin.slice().reverse().map(([j, v], i) => `<div class="rk"><span class="n">${i + 1}</span><span class="nm">${DISC[j]}</span><span class="bar"><i style="width:${v / maxV * 100}%;background:${C_DISC[DISC[j]]}"></i></span><span class="v">${miles(v)}<small>${dec1(v / A.total * 100)} %</small></span></div>`).join("");
+  draw("c_ritmo", present.map(j => ({type: "scatter", x: etq, y: per[j], name: DISC[j], mode: "lines", line: {color: C_DISC[DISC[j]], width: 3}, hovertemplate: `<b>%{x}</b> · ${DISC[j]}: %{y:,.0f}<extra></extra>`})),
+    mk(230, false, 10, {hovermode: "x unified", yaxis: {rangemode: "tozero"}, xaxis: {tickangle: 0, tickfont: {size: 11, color: MUTED}, tickvals: etq.filter((_, k) => k % 2 === 0), categoryorder: "array", categoryarray: etq}}));
   const cnt = {}; for (const i of F) { const k = rSede[i] * 100 + rDisc[i] * 10 + rPlan[i]; cnt[k] = (cnt[k] || 0) + 1; }
-  const ids = [], labels = [], parents = [], values = [], colors = [], SC = {"Sede Norte": "#5B4B7A", "Sede Centro": "#3F6B7E"};
+  const ids = [], labels = [], parents = [], values = [], colors = [], SC = {"Sede Norte": "#4A4044", "Sede Centro": "#8D7C84"};
   SEDES.forEach((s, a) => { let ts = 0; DISC.forEach((_, b) => PLANES.forEach((_, c) => ts += cnt[a * 100 + b * 10 + c] || 0));
-    if (!ts) return; ids.push(s); labels.push(s); parents.push(""); values.push(ts); colors.push(SC[s] || "#4A4060");
+    if (!ts) return; ids.push(s); labels.push(s); parents.push(""); values.push(ts); colors.push(SC[s] || "#6b5f64");
     DISC.forEach((d, b) => { let td = 0; PLANES.forEach((_, c) => td += cnt[a * 100 + b * 10 + c] || 0); if (!td) return;
       ids.push(`${s}|${d}`); labels.push(d); parents.push(s); values.push(td); colors.push(C_DISC[d]);
       PLANES.forEach((p, c) => { const v = cnt[a * 100 + b * 10 + c] || 0; if (!v) return; ids.push(`${s}|${d}|${p}`); labels.push(p); parents.push(`${s}|${d}`); values.push(v); colors.push(C_PLAN[p]); }); }); });
-  draw("c_sun", [{type: "sunburst", ids, labels, parents, values, branchvalues: "total", marker: {colors, line: {color: "#0E0A14", width: 2}}, insidetextorientation: "radial",
-    textfont: {color: "#fff", size: 13}, hovertemplate: "<b>%{label}</b><br>%{value:,.0f} asistencias<br>%{percentParent:.1%} de su grupo<extra></extra>"}], mk(560, false, 0));
+  draw("c_sun", [{type: "sunburst", ids, labels, parents, values, branchvalues: "total", marker: {colors, line: {color: WHITE, width: 2}}, insidetextorientation: "radial",
+    textfont: {family: DISP, size: 16}, hovertemplate: "<b>%{label}</b><br>%{value:,.0f} asistencias<br>%{percentParent:.1%} de su grupo<extra></extra>"}], mk(560, false, 0));
 }
 
-/* ════════════════════════ 3 · Socios y planes ════════════════════════ */
+/* ── 3 · Socios y planes ── */
 function renderSocios() {
   const pl = planesOn.filter(p => F.some(i => PLANES[rPlan[i]] === p)), gp = {};
   for (const p of pl) gp[p] = {vis: 0, soc: new Set(), h: [], precio: D.precios[p]};
   for (const i of F) { const g = gp[PLANES[rPlan[i]]]; g.vis++; g.soc.add(rSoc[i]); g.h.push(rMin[i] / 60); }
   for (const p of pl) gp[p].ps = gp[p].vis / gp[p].soc.size;
-  $("#d_vps").textContent = `Visitas ÷ socios activos de cada plan. Línea punteada = promedio general (${miles(A.visitasSocio)}).`;
-  draw("c_vps", [{type: "bar", x: pl, y: pl.map(p => gp[p].ps), marker: {color: pl.map(p => C_PLAN[p]), cornerradius: 14}, text: pl.map(p => `<b>${miles(gp[p].ps)}</b>`),
-    textposition: "outside", textfont: {size: 16, color: "#fff"}, cliponaxis: false, customdata: pl.map(p => [gp[p].soc.size, gp[p].vis]),
+  $("#d_vps").textContent = `Visitas divididas entre los socios activos de cada plan. Línea punteada: promedio general (${miles(A.visitasSocio)}).`;
+  draw("c_vps", [{type: "bar", x: pl, y: pl.map(p => gp[p].ps), marker: {color: pl.map(p => C_PLAN[p])}, text: pl.map(p => miles(gp[p].ps)),
+    textposition: "outside", textfont: {family: DISP, size: 24, color: INK}, cliponaxis: false, customdata: pl.map(p => [gp[p].soc.size, gp[p].vis]),
     hovertemplate: "<b>%{x}</b><br>%{y:,.1f} visitas por socio<br>%{customdata[0]} socios · %{customdata[1]:,.0f} visitas<extra></extra>"}],
-    mk(380, false, 20, {shapes: [{type: "line", xref: "paper", x0: 0, x1: 1, yref: "y", y0: A.visitasSocio, y1: A.visitasSocio, line: {color: "rgba(255,255,255,.5)", dash: "dot", width: 1.5}}],
-      yaxis: {title: {text: null}, rangemode: "tozero"}, xaxis: {tickfont: {size: 14, color: "#fff"}, tickvals: pl, ticktext: pl.map(p => `${p}<br><span style='font-size:11px'>${gp[p].soc.size} socios</span>`)}}));
-  const tr = [];
+    mk(380, false, 20, {bargap: .35, shapes: [{type: "line", xref: "paper", x0: 0, x1: 1, yref: "y", y0: A.visitasSocio, y1: A.visitasSocio, line: {color: "rgba(44,44,44,.55)", dash: "dot", width: 1.5}}],
+      yaxis: {title: {text: null}, rangemode: "tozero"}, xaxis: {tickfont: {family: DISP, size: 18, color: INK}, tickvals: pl, ticktext: pl.map(p => `${p}<br><span style='font-size:12px;font-family:Barlow;color:${MUTED}'>${gp[p].soc.size} socios</span>`)}}));
+  const tr = [], horaAnn = [];
   for (const p of pl) { const h = gp[p].h.slice().sort((a, b) => a - b), col = C_PLAN[p], mean = h.reduce((s, v) => s + v, 0) / h.length, lo = h[0], hi = h[h.length - 1], q1 = quantile(h, .25), q3 = quantile(h, .75);
-    tr.push({type: "scatter", x: [lo, hi], y: [p, p], mode: "lines", line: {color: rgba(col, .35), width: 3}, hoverinfo: "skip", showlegend: false});
-    tr.push({type: "scatter", x: [q1, q3], y: [p, p], mode: "lines", line: {color: col, width: 16}, hoverinfo: "skip", showlegend: false});
-    tr.push({type: "scatter", x: [mean], y: [p], mode: "markers+text", text: [`<b>${hhmm(mean)}</b>`], textposition: "top center", textfont: {color: "#fff", size: 14}, marker: {size: 17, color: "#fff", line: {width: 4, color: col}},
+    tr.push({type: "scatter", x: [lo, hi], y: [p, p], mode: "lines", line: {color: rgba(col === SOFT ? "#E58AB0" : col, .6), width: 2}, hoverinfo: "skip", showlegend: false});
+    tr.push({type: "scatter", x: [q1, q3], y: [p, p], mode: "lines", line: {color: col, width: 18}, hoverinfo: "skip", showlegend: false});
+    horaAnn.push({x: mean, y: p, yshift: 26, text: hhmm(mean), showarrow: false, font: {family: DISP, color: INK, size: 19}});
+    tr.push({type: "scatter", x: [mean], y: [p], mode: "markers", marker: {size: 14, color: WHITE, line: {width: 4, color: INK}},
       hovertemplate: `<b>${p}</b><br>Promedio ${hhmm(mean)}<br>Más temprano ${hhmm(lo)} · más tarde ${hhmm(hi)}<extra></extra>`, showlegend: false}); }
-  draw("c_hora", tr, mk(380, false, 20, {xaxis: {range: [5.2, 10.2], tickvals: [5, 6, 7, 8, 9, 10], ticktext: [5, 6, 7, 8, 9, 10].map(h => pad2(h) + ":00")},
-    yaxis: {categoryorder: "array", categoryarray: pl.slice().reverse(), tickfont: {size: 14, color: "#fff"}, showgrid: false}}));
-  // top 10 socios
+  draw("c_hora", tr, mk(380, false, 20, {annotations: horaAnn, xaxis: {range: [5.2, 10.2], tickvals: [5, 6, 7, 8, 9, 10], ticktext: [5, 6, 7, 8, 9, 10].map(h => pad2(h) + ":00")},
+    yaxis: {categoryorder: "array", categoryarray: pl.slice().reverse(), tickfont: {family: DISP, size: 18, color: INK}, showgrid: false}}));
   const cs = new Map(); for (const i of F) cs.set(rSoc[i], (cs.get(rSoc[i]) || 0) + 1);
   const top = [...cs.entries()].sort((a, b) => b[1] - a[1]).slice(0, 10).reverse();
-  draw("c_top", [{type: "bar", x: top.map(t => t[1]), y: top.map(t => D.socios[t[0]][0]), orientation: "h", marker: {color: top.map(t => C_PLAN[PLANES[D.socios[t[0]][1]]]), cornerradius: 8},
-    text: top.map(t => t[1]), textposition: "inside", insidetextanchor: "end", textfont: {color: "#fff", size: 13}, customdata: top.map(t => [PLANES[D.socios[t[0]][1]], (t[1] / A.total * 100).toFixed(2).replace(".", ",")]),
+  draw("c_top", [{type: "bar", x: top.map(t => t[1]), y: top.map(t => D.socios[t[0]][0]), orientation: "h", marker: {color: top.map(t => C_PLAN[PLANES[D.socios[t[0]][1]]])},
+    text: top.map(t => t[1]), textposition: "outside", cliponaxis: false, textfont: {family: DISP, color: INK, size: 16}, customdata: top.map(t => [PLANES[D.socios[t[0]][1]], (t[1] / A.total * 100).toFixed(2).replace(".", ",")]),
     hovertemplate: "<b>%{y}</b><br>%{x} visitas<br>Plan %{customdata[0]} · %{customdata[1]} % del total<extra></extra>"}],
-    mk(420, false, 10, {yaxis: {tickfont: {color: "#fff"}, showgrid: false}, xaxis: {rangemode: "tozero"}}));
-  // costo por visita
+    mk(420, false, 10, {margin: {r: 34}, bargap: .3, yaxis: {tickfont: {color: INK, size: 13}, showgrid: false}, xaxis: {rangemode: "tozero"}}));
   const fmin = Math.min(...F.map(i => rDay[i])), mt = Math.max(1, (A.dmax - fmin) / 30.44);
-  $("#plans").innerHTML = '<div class="plans">' + pl.map(p => { const vm = gp[p].ps / mt, cv = vm ? gp[p].precio / vm : 0;
-    return `<div class="plan" style="--c:${C_PLAN[p]}"><div class="n">${p}</div><div class="big">$${miles(cv)}</div><div class="s">por visita<br>$${miles(gp[p].precio)}/mes · ${dec1(vm)} visitas/mes</div></div>`; }).join("") + "</div>";
+  $("#plans").innerHTML = `<table class="mini"><thead><tr><th>Plan</th><th class="n">Precio mensual</th><th class="n">Visitas al mes</th><th class="n">Costo por visita</th></tr></thead><tbody>` +
+    pl.map(p => { const vm = gp[p].ps / mt, cv = vm ? gp[p].precio / vm : 0;
+      return `<tr><td><span class="sw" style="background:${C_PLAN[p]}"></span>${p}</td><td class="n">$${miles(gp[p].precio)}</td><td class="n">${dec1(vm)}</td><td class="n"><b>$${miles(cv)}</b></td></tr>`; }).join("") + "</tbody></table>";
   const mm = {}; for (const p of pl) mm[p] = new Array(A.P).fill(0); for (const i of F) mm[PLANES[rPlan[i]]][rMon[i] - A.pmin]++;
-  draw("c_costo", pl.map(p => ({type: "scatter", x: A.etq, y: mm[p].map(v => v / gp[p].soc.size), name: p, mode: "lines", line: {color: C_PLAN[p], width: 3, shape: "spline"}, hovertemplate: `<b>%{x}</b> · ${p}: %{y:,.1f} visitas/socio<extra></extra>`})),
+  draw("c_costo", pl.map(p => ({type: "scatter", x: A.etq, y: mm[p].map(v => v / gp[p].soc.size), name: p, mode: "lines", line: {color: C_PLAN[p] === SOFT ? "#F26AA2" : C_PLAN[p], width: 3}, hovertemplate: `<b>%{x}</b> · ${p}: %{y:,.1f} visitas/socio<extra></extra>`})),
     mk(250, true, 30, {hovermode: "x unified", yaxis: {rangemode: "tozero"}}));
 }
 
-/* ════════════════════════ 4 · Horarios ════════════════════════ */
+/* ── 4 · Horarios ── */
 function renderHorarios() {
   const horas = [...new Set(F.map(i => rHC[i]))].sort((a, b) => a - b), z = Array.from({length: 7}, () => horas.map(() => null)), dw = new Array(7).fill(0);
   for (const i of F) { const c = horas.indexOf(rHC[i]); z[rDow[i]][c] = (z[rDow[i]][c] || 0) + 1; dw[rDow[i]]++; }
-  draw("c_heat", [{type: "heatmap", z, x: horas.map(h => pad2(h) + ":00"), y: DIAS, xgap: 4, ygap: 4, hoverongaps: false,
-    colorscale: [[0, "#1B1424"], [.1, "#3A1646"], [.45, "#9B1B74"], [.8, "#F0237F"], [1, "#FFC2E0"]], colorbar: {thickness: 10, tickfont: {color: MUTED}, outlinewidth: 0},
-    hovertemplate: "<b>%{y} · %{x}</b><br>%{z:,.0f} asistencias<extra></extra>"}],
-    mk(400, false, 10, {yaxis: {autorange: "reversed", showgrid: false, tickfont: {color: "#fff"}}, xaxis: {showgrid: false, type: "category"}}));
+  draw("c_heat", [{type: "heatmap", z, x: horas.map(h => pad2(h) + ":00"), y: DIAS, xgap: 4, ygap: 4, hoverongaps: false, colorscale: HEAT,
+    colorbar: {thickness: 10, tickfont: {color: MUTED}, outlinewidth: 0}, hovertemplate: "<b>%{y} · %{x}</b><br>%{z:,.0f} asistencias<extra></extra>"}],
+    mk(400, false, 10, {yaxis: {autorange: "reversed", showgrid: false, tickfont: {family: DISP, size: 17, color: INK}}, xaxis: {showgrid: false, type: "category"}}));
   const mx = argmax(dw);
-  draw("c_dow", [{type: "bar", x: DIAS, y: dw, text: dw.map(miles), textposition: "outside", cliponaxis: false, textfont: {color: "#fff", size: 12},
-    marker: {color: dw.map((_, i) => i === mx ? PINK : rgba(PINK, .35)), cornerradius: 10}, hovertemplate: "<b>%{x}</b><br>%{y:,.0f} asistencias<extra></extra>"}],
-    mk(400, false, 20, {yaxis: {rangemode: "tozero", title: {text: null}}, xaxis: {tickfont: {color: "#fff", size: 13}}}));
+  draw("c_dow", [{type: "bar", x: DIAS, y: dw, text: dw.map(miles), textposition: "outside", cliponaxis: false, textfont: {family: DISP, color: INK, size: 17},
+    marker: {color: dw.map((_, i) => i === mx ? PINK : SOFT)}, hovertemplate: "<b>%{x}</b><br>%{y:,.0f} asistencias<extra></extra>"}],
+    mk(400, false, 20, {bargap: .25, yaxis: {rangemode: "tozero", title: {text: null}}, xaxis: {tickfont: {family: DISP, color: INK, size: 17}}}));
   const ps = SEDES.map(() => new Array(A.P).fill(0)); for (const i of F) ps[rSede[i]][rMon[i] - A.pmin]++;
-  draw("c_sedes", SEDES.map((s, j) => ({type: "bar", x: A.etq, y: ps[j], name: s, marker: {color: C_SEDE[s], cornerradius: 6}, hovertemplate: `<b>%{x}</b> · ${s}<br>%{y:,.0f}<extra></extra>`})).filter((_, j) => ps[j].some(v => v > 0)),
+  draw("c_sedes", SEDES.map((s, j) => ({type: "bar", x: A.etq, y: ps[j], name: s, marker: {color: C_SEDE[s]}, hovertemplate: `<b>%{x}</b> · ${s}<br>%{y:,.0f}<extra></extra>`})).filter((_, j) => ps[j].some(v => v > 0)),
     mk(330, true, 30, {barmode: "group", bargap: .25, hovermode: "x unified"}));
 }
 
-/* ════════════════════════ 5 · Canal de ingreso ════════════════════════ */
+/* ── 5 · Canal de ingreso ── */
 function renderCanal() {
   const pl = planesOn.filter(p => F.some(i => PLANES[rPlan[i]] === p)), ct = {}; for (const p of pl) ct[p] = [0, 0, 0];
   for (const i of F) ct[PLANES[rPlan[i]]][rCanal[i]]++;
   const cPres = [0, 1, 2].filter(c => pl.some(p => ct[p][c] > 0));
-  draw("c_cplan", cPres.map(c => { const pct = pl.map(p => ct[p][c] / ct[p].reduce((s, v) => s + v, 0) * 100);
-    return {type: "bar", y: pl, x: pct, name: CANALES[c], orientation: "h", marker: {color: C_CANAL[CANALES[c]], line: {color: "#0E0A14", width: 3}}, text: pct.map(v => v >= 4 ? `${v.toFixed(0)} %` : ""),
-      textposition: "inside", textfont: {color: "#fff", size: 14}, customdata: pl.map(p => ct[p][c]), hovertemplate: `<b>%{y}</b> · ${CANALES[c]}<br>%{x:.1f} % (%{customdata:,.0f} entradas)<extra></extra>`}; }),
-    mk(360, true, 30, {barmode: "stack", bargap: .3, xaxis: {range: [0, 100], ticksuffix: " %"}, yaxis: {categoryorder: "array", categoryarray: pl.slice().reverse(), tickfont: {size: 14, color: "#fff"}, showgrid: false}}));
+  draw("c_cplan", cPres.map(c => { const pct = pl.map(p => ct[p][c] / ct[p].reduce((s, v) => s + v, 0) * 100), col = C_CANAL[CANALES[c]];
+    return {type: "bar", y: pl, x: pct, name: CANALES[c], orientation: "h", marker: {color: col, line: {color: WHITE, width: 3}}, text: pct.map(v => v >= 4 ? `${v.toFixed(0)} %` : ""),
+      textposition: "inside", textfont: {family: DISP, color: textOn(col), size: 20}, customdata: pl.map(p => ct[p][c]), hovertemplate: `<b>%{y}</b> · ${CANALES[c]}<br>%{x:.1f} % (%{customdata:,.0f} entradas)<extra></extra>`}; }),
+    mk(360, true, 30, {barmode: "stack", bargap: .3, xaxis: {range: [0, 100], ticksuffix: " %"}, yaxis: {categoryorder: "array", categoryarray: pl.slice().reverse(), tickfont: {family: DISP, size: 18, color: INK}, showgrid: false}}));
   const cm = [0, 1, 2].map(() => new Array(A.P).fill(0)); for (const i of F) cm[rCanal[i]][rMon[i] - A.pmin]++;
-  draw("c_cmes", cPres.map(c => ({type: "scatter", x: A.etq, y: cm[c].map((v, k) => { const t = cm[0][k] + cm[1][k] + cm[2][k]; return t ? v / t * 100 : null; }), name: CANALES[c], mode: "lines+markers", stackgroup: "u",
-    line: {width: 1.5, color: C_CANAL[CANALES[c]]}, fillcolor: rgba(C_CANAL[CANALES[c]], .55), marker: {size: 6}, hovertemplate: `<b>%{x}</b> · ${CANALES[c]}: %{y:.1f} %<extra></extra>`})),
+  draw("c_cmes", cPres.map(c => ({type: "scatter", x: A.etq, y: cm[c].map((v, k) => { const t = cm[0][k] + cm[1][k] + cm[2][k]; return t ? v / t * 100 : null; }), name: CANALES[c], mode: "lines", stackgroup: "u",
+    line: {width: 1.5, color: WHITE}, fillcolor: C_CANAL[CANALES[c]], hovertemplate: `<b>%{x}</b> · ${CANALES[c]}: %{y:.1f} %<extra></extra>`})),
     mk(360, true, 30, {hovermode: "x unified", yaxis: {range: [0, 100], ticksuffix: " %"}}));
-  // sankey plan → canal → disciplina
   const dPres = DISC.map((_, j) => j).filter(j => F.some(i => rDisc[i] === j)), nodes = [...pl, ...cPres.map(c => CANALES[c]), ...dPres.map(j => DISC[j])];
   const pos = Object.fromEntries(nodes.map((n, i) => [n, i])), colN = {...C_PLAN, ...C_CANAL, ...C_DISC}, ab = {}, bc = {};
   for (const i of F) { const k1 = PLANES[rPlan[i]] + "|" + CANALES[rCanal[i]], k2 = CANALES[rCanal[i]] + "|" + DISC[rDisc[i]]; ab[k1] = (ab[k1] || 0) + 1; bc[k2] = (bc[k2] || 0) + 1; }
   const src = [], tgt = [], val = [];
   for (const [k, v] of [...Object.entries(ab), ...Object.entries(bc)]) { const [a, b] = k.split("|"); src.push(pos[a]); tgt.push(pos[b]); val.push(v); }
-  draw("c_sankey", [{type: "sankey", arrangement: "snap", node: {label: nodes, color: nodes.map(n => colN[n] || PINK), pad: 22, thickness: 22, line: {color: "#0E0A14", width: 1}},
-    link: {source: src, target: tgt, value: val, color: src.map(s => rgba(colN[nodes[s]], .35)), hovertemplate: "%{source.label} → %{target.label}<br>%{value:,.0f} asistencias<extra></extra>"}, textfont: {color: "#fff", size: 14}}], mk(470, false, 10));
+  draw("c_sankey", [{type: "sankey", arrangement: "snap", node: {label: nodes, color: nodes.map(n => colN[n] || PINK), pad: 22, thickness: 20, line: {color: WHITE, width: 1}},
+    link: {source: src, target: tgt, value: val, color: src.map(s => rgba(colN[nodes[s]], .3)), hovertemplate: "%{source.label} → %{target.label}<br>%{value:,.0f} asistencias<extra></extra>"}, textfont: {family: DISP, color: INK, size: 18}}], mk(470, false, 10));
 }
 
-/* ════════════════════════ 6 · Datos (tabla con scroll virtual) ════════════════════════ */
+/* ── 6 · Datos ── */
 const COLS = [["Fecha", i => rDay[i]], ["Hora", i => rMin[i]], ["Socio", i => D.socios[rSoc[i]][0]], ["Plan", i => PLANES[rPlan[i]]], ["Sede", i => SEDES[rSede[i]]],
   ["Disciplina", i => DISC[rDisc[i]]], ["Instructor", i => D.clases[D.clase[i]][3]], ["Canal", i => CANALES[rCanal[i]]]];
 const fmtCell = [i => { const d = dayDate(rDay[i]); return `${pad2(d.getUTCDate())}/${pad2(d.getUTCMonth() + 1)}/${d.getUTCFullYear()}`; }, i => `${pad2(Math.floor(rMin[i] / 60))}:${pad2(rMin[i] % 60)}:00`, ...COLS.slice(2).map(c => c[1])];
 let rowsSorted = [], sortCol = -1, sortAsc = true;
-function sortRows() {
-  rowsSorted = F.slice();
-  if (sortCol < 0) return;
-  const f = COLS[sortCol][1], s = sortAsc ? 1 : -1;
-  rowsSorted.sort((a, b) => { const x = f(a), y = f(b); return (x < y ? -1 : x > y ? 1 : 0) * s || a - b; });
-}
+function sortRows() { rowsSorted = F.slice(); if (sortCol < 0) return; const f = COLS[sortCol][1], s = sortAsc ? 1 : -1; rowsSorted.sort((a, b) => { const x = f(a), y = f(b); return (x < y ? -1 : x > y ? 1 : 0) * s || a - b; }); }
 function drawRows() {
-  const vp = $("#vp"), top = Math.floor(vp.scrollTop / 34), n = Math.ceil(vp.clientHeight / 34) + 6;
-  let h = ""; for (let r = top; r < Math.min(top + n, rowsSorted.length); r++) { const i = rowsSorted[r];
-    h += `<div class="tr" style="top:${r * 34}px">${fmtCell.map(f => `<span>${f(i)}</span>`).join("")}</div>`; }
+  const vp = $("#vp"), top = Math.floor(vp.scrollTop / 34), n = Math.ceil(vp.clientHeight / 34) + 6; let h = "";
+  for (let r = top; r < Math.min(top + n, rowsSorted.length); r++) { const i = rowsSorted[r]; h += `<div class="tr" style="top:${r * 34}px">${fmtCell.map(f => `<span>${f(i)}</span>`).join("")}</div>`; }
   $("#vpin").innerHTML = h; $("#vpin").style.height = rowsSorted.length * 34 + "px"; $("#vpin").style.position = "relative";
 }
 function renderDatos() {
@@ -637,23 +529,17 @@ $("#dl").onclick = () => {
   a.download = "asistencias_filtradas.csv"; a.click(); URL.revokeObjectURL(a.href);
 };
 
-/* ════════════════════════ Orquestación ════════════════════════ */
-const RENDER = [renderEvolucion, renderCarrera, renderSocios, renderHorarios, renderCanal, renderDatos];
-const dirty = new Set();
+/* ── Orquestación ── */
+const RENDER = [renderEvolucion, renderCarrera, renderSocios, renderHorarios, renderCanal, renderDatos], dirty = new Set();
 function showTab(i) {
   S.tab = i;
   document.querySelectorAll(".tab").forEach((t, k) => t.classList.toggle("active", k === i));
   document.querySelectorAll(".panel").forEach((p, k) => p.classList.toggle("active", k === i));
-  if (dirty.has(i)) { dirty.delete(i); RENDER[i](); }
-  else document.querySelectorAll("#p" + i + " .js-plotly-plot").forEach(el => Plotly.Plots.resize(el));
+  if (dirty.has(i)) { dirty.delete(i); RENDER[i](); } else document.querySelectorAll("#p" + i + " .js-plotly-plot").forEach(el => Plotly.Plots.resize(el));
 }
 function update() {
-  compute();
-  const ok = !!A; $("#warn").hidden = ok; $("#dash").hidden = !ok;
-  if (!ok) return;
-  renderTop();
-  for (let k = 0; k < RENDER.length; k++) dirty.add(k);
-  showTab(S.tab);
+  compute(); const ok = !!A; $("#warn").hidden = ok; $("#dash").hidden = !ok; if (!ok) return;
+  renderTop(); for (let k = 0; k < RENDER.length; k++) dirty.add(k); showTab(S.tab);
 }
 document.querySelectorAll(".tab").forEach((t, k) => t.onclick = () => showTab(k));
 document.querySelectorAll("#seg button").forEach(b => b.onclick = () => { S.vista = b.textContent; document.querySelectorAll("#seg button").forEach(x => x.classList.toggle("on", x === b)); chartMes(); });
@@ -663,7 +549,7 @@ $("#d1").onchange = e => { S.d1 = e.target.value ? dayOfIso(e.target.value) : S.
 $("#reset").onclick = resetFilters;
 $("#menuBtn").onclick = () => document.body.classList.toggle("side-open");
 document.addEventListener("click", e => { if (document.body.classList.contains("side-open") && !e.target.closest("#side") && !e.target.closest("#menuBtn")) document.body.classList.remove("side-open"); });
-syncDates(); for (const k of Object.keys(PILL_BOX)) drawPills(k);
+syncDates(); for (const k of Object.keys(BOX)) drawChecks(k);
 update();
 })();
 </script>
